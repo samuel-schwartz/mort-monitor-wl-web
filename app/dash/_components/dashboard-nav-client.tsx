@@ -16,7 +16,7 @@ import {
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useState } from "react"
-import { signOutUser } from "@/app/actions/auth"
+import { signOutUser } from "@/app/_actions/auth"
 import type { User } from "@/types/models"
 import type { Property, Broker } from "@/types/models"
 import Image from "next/image"

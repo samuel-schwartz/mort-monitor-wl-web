@@ -1,13 +1,10 @@
 import { AccountSettings } from "@/app/account/_components/account-settings"
-import { getUser } from "@/app/actions/users"
-import { getBroker } from "@/app/actions/brokers"
-import { getCurrentUserId } from "@/lib/session"
+import { getBroker } from "@/app/_actions/brokers"
 import { BackButton } from "./_components/back-button"
+import { getUser } from "../_actions/auth"
 
 export default async function AccountPage() {
-  const userId = await getCurrentUserId()
-  const userResult = await getUser(userId)
-  const user = userResult.success ? userResult.user : null
+  const user = await getUser()
 
   let brandColor: string | undefined
   if (user && "brokerId" in user && user.brokerId) {

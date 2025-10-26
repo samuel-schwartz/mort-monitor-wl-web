@@ -7,16 +7,30 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { updateBroker } from "@/app/actions/brokers"
+import { updateBroker } from "@/app/_actions/brokers"
 import { useToast } from "@/hooks/use-toast"
 import { X } from "lucide-react"
 import type { Broker } from "@/types/models"
+import { getBrokerFromContext } from "@/app/_providers/broker-provider"
 
-interface BrokerSettingsFormProps {
-  broker: Broker
+function ErrorComp() {
+
+  return (
+    <div className="space-y-6">
+      <div className="border rounded-lg p-6">
+        <h2 className="text-lg font-semibold mb-2">Error Loading Settings</h2>
+        <p className="text-sm text-muted-foreground">
+          Unable to load broker information. Please try refreshing the page or contact support if the issue persists.
+        </p>
+      </div>
+    </div>
+  )
 }
 
-export function BrokerSettingsForm({ broker }: BrokerSettingsFormProps) {
+export function BrokerSettingsForm() {
+  const broker = getBrokerFromContext()
+  if(!broker) return <ErrorComp />
+
   const { toast } = useToast()
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -26,12 +40,11 @@ export function BrokerSettingsForm({ broker }: BrokerSettingsFormProps) {
   const [emailInput, setEmailInput] = useState("")
   const [emailError, setEmailError] = useState("")
 
-  const [formData, setFormData] = useState({
-    firstName: broker.firstName || "",
-    lastName: broker.lastName || "",
-    phone: broker.phone || "",
-    companyName: broker.companyName || "",
-  })
+    const [formData, setFormData] = useState({
+      companyName: broker.companyName,
+      logoUrl: broker.logoUrl,
+      brandColor: broker.brandColor,
+    })
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -136,10 +149,9 @@ export function BrokerSettingsForm({ broker }: BrokerSettingsFormProps) {
 
   const handleCancel = () => {
     setFormData({
-      firstName: broker.firstName || "",
-      lastName: broker.lastName || "",
-      phone: broker.phone || "",
-      companyName: broker.companyName || "",
+      companyName: broker.companyName,
+      brandColor: broker.brandColor,
+      logoUrl: broker.logoUrl
     })
     setLogoPreview(broker.logoUrl || "")
     setLogoFile(null)
@@ -152,47 +164,9 @@ export function BrokerSettingsForm({ broker }: BrokerSettingsFormProps) {
   return (
     <div className="border rounded-lg">
       <div className="p-6 space-y-6">
-        {/* Personal Information */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-medium">Personal Information</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
-              <Input
-                id="firstName"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                disabled={!isEditing || isSaving}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
-              <Input
-                id="lastName"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                disabled={!isEditing || isSaving}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              disabled={!isEditing || isSaving}
-              placeholder="(555) 123-4567"
-            />
-          </div>
-        </div>
 
         {/* Company Information */}
-        <div className="border-t pt-6 space-y-4">
+        <div className="space-y-4">
           <h2 className="text-lg font-medium">Company Information</h2>
 
           <div className="space-y-2">
@@ -230,6 +204,41 @@ export function BrokerSettingsForm({ broker }: BrokerSettingsFormProps) {
               )}
             </div>
           </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="brandColor">Brand Color</Label>
+        
+          <div className="grid grid-cols-4 gap-3">
+            <Input
+              id="brandColor"
+              type="color"
+              value={formData.brandColor}
+              onChange={(e) => setFormData({ ...formData, brandColor: e.target.value })}
+              disabled={!isEditing || isSaving}
+              className="cursor-pointer p-1 border-2 rounded-md"
+            />
+        
+            <Input
+              type="text"
+              value={formData.brandColor}
+              onChange={(e) => {
+                const value = e.target.value
+                if (value === "" || /^#[0-9A-Fa-f]{0,6}$/.test(value)) {
+                  setFormData({ ...formData, brandColor: value })
+                }
+              }}
+              placeholder="#3b82f6"
+              pattern="^#[0-9A-Fa-f]{6}$"
+              maxLength={7}
+              disabled={!isEditing || isSaving}
+              className="font-mono text-sm col-span-3"
+            />
+          </div>
+        
+          <p className="text-xs text-muted-foreground">
+            Choose a brand color for white-label customization
+          </p>
         </div>
 
         {/* Team Email Management */}

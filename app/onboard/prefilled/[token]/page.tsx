@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { validateToken } from "@/app/actions/tokens"
-import { getClient } from "@/app/actions/clients"
+import { validateToken } from "@/app/_actions/tokens"
+import { getClient } from "@/app/_actions/clients"
 import { PrefilledOnboarding } from "./_components/prefilled-onboarding"
 import { Skeleton } from "@/components/ui/skeleton"
 

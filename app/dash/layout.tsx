@@ -1,8 +1,8 @@
 import type React from "react"
 import { DashboardNav } from "./_components/dashboard-nav"
-import { getCurrentUser } from "@/app/actions/auth"
-import { getUserProperties } from "@/app/actions/properties"
-import { getBroker } from "@/app/actions/brokers"
+import { getCurrentUser } from "@/app/_actions/auth"
+import { getUserProperties } from "@/app/_actions/properties"
+import { getBroker } from "@/app/_actions/brokers"
 
 export default async function DashboardLayout({
   children,

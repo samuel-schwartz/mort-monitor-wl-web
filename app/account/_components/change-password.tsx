@@ -4,9 +4,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { changePassword } from "@/app/actions/auth"
+import { changePassword } from "@/app/_actions/auth"
 import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff, Check, X } from "lucide-react"
+import { Eye, EyeOff, Check, X, RectangleEllipsis } from "lucide-react"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ChangePasswordProps {
   userEmail?: string
@@ -15,7 +17,9 @@ interface ChangePasswordProps {
 export function ChangePassword({ userEmail }: ChangePasswordProps) {
   const { toast } = useToast()
   const [isChangingPassword, setIsChangingPassword] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [passwordError, setPasswordError] = useState("")
   const [isPasswordSaving, setIsPasswordSaving] = useState(false)
@@ -66,17 +70,21 @@ export function ChangePassword({ userEmail }: ChangePasswordProps) {
     }
   }
 
-  // Don't show password change for Google users
-  if (isGoogleUser) {
-    return null
-  }
-
   return (
     <div className="space-y-4">
-      <div>
-        <h3 className="text-lg font-semibold">Change Password</h3>
-        <p className="text-sm text-muted-foreground">Update your password to keep your account secure</p>
-      </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <div className="space-y-1.5">
+              <CardTitle className="flex items-center gap-2">
+                <RectangleEllipsis className="h-5 w-5" />
+                Change Password
+              </CardTitle>
+              <CardDescription>Update your password to keep your account secure</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
 
       {!isChangingPassword ? (
         <Button variant="outline" onClick={() => setIsChangingPassword(true)}>
@@ -84,12 +92,34 @@ export function ChangePassword({ userEmail }: ChangePasswordProps) {
         </Button>
       ) : (
         <div className="space-y-4">
+
+<div className="space-y-2">
+            <Label htmlFor="currentPassword">Current Password</Label>
+            <div className="relative">
+              <Input
+                id="currentPassword"
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
+                disabled={isPasswordSaving}
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="newPassword">New Password</Label>
             <div className="relative">
               <Input
                 id="newPassword"
-                type={showPassword ? "text" : "password"}
+                type={showNewPassword ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
@@ -97,10 +127,10 @@ export function ChangePassword({ userEmail }: ChangePasswordProps) {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() => setShowNewPassword(!showNewPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
           </div>
@@ -169,6 +199,8 @@ export function ChangePassword({ userEmail }: ChangePasswordProps) {
           </div>
         </div>
       )}
+    </CardContent>
+    </Card>
     </div>
   )
 }

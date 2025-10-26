@@ -60,6 +60,24 @@ export async function getClient(clientId: string): Promise<ClientResponse> {
 }
 
 /**
+ * Get client by ID
+ */
+export async function reinviteClient(clientId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const result = await apiClient.post(`/clients/${clientId}/reinvite`, {}, ()=>{return {success: true}})
+
+    if (!result.success) {
+      return { success: false, error: result.error || "Client not found" }
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("[v0] Error fetching client:", error)
+    return { success: false, error: "An unexpected error occurred" }
+  }
+}
+
+/**
  * Update client information
  */
 export async function updateClient(

@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { deleteBroker } from "@/app/actions/brokers"
+import { deleteBroker } from "@/app/_actions/brokers"
 import { Trash2 } from "lucide-react"
 
 interface DeleteBrokerButtonProps {

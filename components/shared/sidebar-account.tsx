@@ -1,18 +1,19 @@
 import Link from "next/link"
-import { User } from "@/types/models"
 import { Button } from "@/components/ui/button"
 import { LogOut, UserCog } from "lucide-react"
 import Image from "next/image"
-import { signOutUser } from "@/app/actions/auth"
+import { signOutUser } from "@/app/_actions/auth"
+import { getUserFromContext } from "@/app/_providers/user-provider"
+import { getBrokerFromContext } from "@/app/_providers/broker-provider"
 
+export default function SidebarAccount() {
 
-export default function SidebarAccount({
-    user,
-    brandColor,
-}: {
-    user: User
-    brandColor?: string
-}) {
+    const user = getUserFromContext()
+    if(!user) return
+
+    const broker = getBrokerFromContext()
+    const brandColor = broker ? broker.brandColor : undefined
+
 
     const userInitials = user.firstName.charAt(0).toUpperCase() + user.lastName.charAt(0).toUpperCase()
     console.log(user)

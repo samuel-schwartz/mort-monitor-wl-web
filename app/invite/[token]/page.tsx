@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { InviteAcceptance } from "./_components/invite-acceptance"
 import { Skeleton } from "@/components/ui/skeleton"
-import { validateToken } from "@/app/actions/tokens"
+import { validateToken } from "@/app/_actions/tokens"
 
 export default async function InvitePage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params

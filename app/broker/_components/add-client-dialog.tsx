@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus } from "lucide-react"
-import { createClient } from "@/app/actions/clients"
+import { createClient } from "@/app/_actions/clients"
 
 export function AddClientDialog() {
   const router = useRouter()

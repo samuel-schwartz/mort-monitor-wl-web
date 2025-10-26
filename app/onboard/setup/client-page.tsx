@@ -6,8 +6,8 @@ import { TrendingDown } from "lucide-react"
 import { PropertyDetails } from "../_components/property-details"
 import { AlertSelection } from "../_components/alert-selection"
 import { onboardingReducer, initialOnboardingState } from "../types"
-import { createProperty } from "@/app/actions/properties"
-import { createAlert } from "@/app/actions/alerts"
+import { createProperty } from "@/app/_actions/properties"
+import { createAlert } from "@/app/_actions/alerts"
 import { Spinner } from "@/components/ui/spinner"
 
 export default function OnboardingSetupClientPage() {

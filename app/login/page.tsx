@@ -11,7 +11,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { loginSchema } from "@/lib/validation/schemas"
-import { authenticateUser } from "@/app/actions/auth"
+import { authenticateUser } from "@/app/_actions/auth"
 
 type UserRole = "client" | "broker" | "admin"
 

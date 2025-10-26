@@ -8,17 +8,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { User as LUserIcon, Camera, Trash2, Pencil } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import { updateUser } from "@/app/actions/users"
+import { updateUser } from "@/app/_actions/users"
 import { ChangePassword } from "@/app/account/_components/change-password"
 import { User } from "@/types/models"
 
 
 
-export function AccountSettings( user : User) {
+export function AccountSettings({ user }: { user: User }) {
   const [firstName, setFirstName] = useState(user?.firstName || "")
   const [lastName, setLastName] = useState(user?.lastName || "")
   const [email, setEmail] = useState(user?.email || "")
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.iconUrl || null)
 
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState({ firstName, lastName, email, avatarUrl })
@@ -208,12 +208,10 @@ export function AccountSettings( user : User) {
           )}
         </CardContent>
       </Card>
-
-      <Card>
-        <CardContent className="pt-6">
-          <ChangePassword userEmail={user.email} />
-        </CardContent>
-      </Card>
+      {user.provider == "credentials" && (
+        <ChangePassword userEmail={user.email} />
+      )
+      }
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { notFound } from "next/navigation"
-import { validateToken } from "@/app/actions/tokens"
+import { validateToken } from "@/app/_actions/tokens"
 import { InvitePasswordSetup } from "./_components/invite-password-setup"
 import { Skeleton } from "@/components/ui/skeleton"
 

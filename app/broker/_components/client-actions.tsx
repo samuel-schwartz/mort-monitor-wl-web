@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { MoreVertical, Trash2, Eye } from "lucide-react"
-import { deleteClient } from "@/app/actions/clients"
+import { deleteClient } from "@/app/_actions/clients"
 
 interface ClientActionsProps {
   clientId: string

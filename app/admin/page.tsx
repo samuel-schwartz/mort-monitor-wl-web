@@ -1,4 +1,4 @@
-import { getAllBrokers } from "@/app/actions/brokers"
+import { getAllBrokers } from "@/app/_actions/brokers"
 import { Button } from "@/components/ui/button"
 import { Building2, Plus } from "lucide-react"
 import { BrokersTable } from "./_components/brokers-table"

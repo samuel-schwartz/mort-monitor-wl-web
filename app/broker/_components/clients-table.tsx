@@ -16,31 +16,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { ArrowUpDown, Trash2 } from "lucide-react"
-import { deleteClient } from "@/app/actions/clients"
+import { ArrowUpDown, Mail, Trash2 } from "lucide-react"
+import { deleteClient, reinviteClient } from "@/app/_actions/clients"
 import { useRouter } from "next/navigation"
-import { toast } from "sonner"
+import { ClientSummary } from "@/types/models"
 
-type Client = {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  propertyCount: number
-  activeAlertCount: number
-  soundingAlertCount: number
-  onboardingComplete: boolean
-  createdAt: string
-  invitedAt: string
-  properties?: Array<{ id: string }>
-}
+import { useToast } from "@/hooks/use-toast"
 
-type SortField = "name" | "email" | "alerts" | "soundingAlerts" | "status" | "dateAdded"
+
+type SortField = "fname" | "lname" | "email" | "alerts" | "soundingAlerts" | "status" | "dateInvited"
 type SortDirection = "asc" | "desc"
 
-export function ClientsTable({ clients }: { clients: Client[] }) {
+export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
+
+  const { toast } = useToast()
   const router = useRouter()
-  const [sortField, setSortField] = useState<SortField>("name")
+  const [sortField, setSortField] = useState<SortField>("lname")
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [clientToDelete, setClientToDelete] = useState<{ id: string; name: string } | null>(null)
@@ -60,9 +51,13 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
     let bValue: string | number | boolean
 
     switch (sortField) {
-      case "name":
-        aValue = `${a.firstName} ${a.lastName}`.toLowerCase()
-        bValue = `${b.firstName} ${b.lastName}`.toLowerCase()
+      case "fname":
+        aValue = `${a.firstName}`.toLowerCase()
+        bValue = `${b.firstName}`.toLowerCase()
+        break
+      case "lname":
+        aValue = `${a.lastName}`.toLowerCase()
+        bValue = `${b.lastName}`.toLowerCase()
         break
       case "email":
         aValue = a.email.toLowerCase()
@@ -74,15 +69,15 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
         break
       case "soundingAlerts":
         aValue = a.soundingAlertCount
-        bValue = a.soundingAlertCount
+        bValue = b.soundingAlertCount
         break
       case "status":
-        aValue = a.onboardingComplete
-        bValue = a.onboardingComplete
+        aValue = a.onboardingStatus
+        bValue = b.onboardingStatus
         break
-      case "dateAdded":
-        aValue = new Date(a.createdAt).getTime()
-        bValue = new Date(b.createdAt).getTime()
+      case "dateInvited":
+        aValue = new Date(a.invitedAt).getTime()
+        bValue = new Date(b.invitedAt).getTime()
         break
       default:
         return 0
@@ -105,14 +100,34 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
     try {
       const result = await deleteClient(clientToDelete.id)
       if (result.success) {
-        toast.success("Client deleted successfully")
+        toast({description:"Client deleted successfully"})
         router.refresh()
         setDeleteDialogOpen(false)
       } else {
-        toast.error(result.error || "Failed to delete client")
+        toast({description:result.error || "Failed to delete client"})
       }
     } catch (error) {
-      toast.error("An unexpected error occurred")
+      toast({description:"An unexpected error occurred"})
+    } finally {
+      setIsDeleting(false)
+      setClientToDelete(null)
+    }
+  }
+
+  const handleReinvite = async (clientId: string) => {
+    console.log("HandleReinvite")
+    toast({description:"Starting Reinvite"})
+    if (!clientId) return
+
+    try {
+      const result = await reinviteClient(clientId)
+      if (result.success) {
+        toast({description:"Client reinvited successfully"})
+      } else {
+        toast({description:result.error || "Failed to reinvite client"})
+      }
+    } catch (error) {
+      toast({description:"An unexpected error occurred"})
     } finally {
       setIsDeleting(false)
       setClientToDelete(null)
@@ -135,7 +150,6 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
     const date = new Date(dateString)
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
   }
-
   return (
     <>
       <div className="w-full rounded-md border">
@@ -143,7 +157,10 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-auto">
-                <SortButton field="name">Name</SortButton>
+                <SortButton field="fname">First Name</SortButton>
+              </TableHead>
+              <TableHead className="w-auto">
+                <SortButton field="lname">Last Name</SortButton>
               </TableHead>
               <TableHead className="hidden md:table-cell">
                 <SortButton field="email">Email</SortButton>
@@ -158,7 +175,7 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
                 <SortButton field="status">Status</SortButton>
               </TableHead>
               <TableHead className="hidden lg:table-cell w-32">
-                <SortButton field="dateAdded">Date Added</SortButton>
+                <SortButton field="dateInvited">Date Invited</SortButton>
               </TableHead>
               <TableHead className="w-32 text-right">Actions</TableHead>
             </TableRow>
@@ -175,15 +192,32 @@ export function ClientsTable({ clients }: { clients: Client[] }) {
                 return (
                   <TableRow key={client.id}>
                     <TableCell className="font-medium max-w-[150px] truncate sm:max-w-none">
-                      {client.firstName} {client.lastName}
+                      {client.firstName}
+                    </TableCell>
+                    <TableCell className="font-medium max-w-[150px] truncate sm:max-w-none">
+                      {client.lastName}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">{client.email}</TableCell>
                     <TableCell className="text-center hidden sm:table-cell">{client.activeAlertCount}</TableCell>
                     <TableCell className="text-center hidden lg:table-cell">{client.soundingAlertCount}</TableCell>
-                    <TableCell className="hidden xl:table-cell">
-                      {client.onboardingComplete ? "Active" : "Invited"}
+                    <TableCell className="hidden xl:table-cell text-center">
+                      
+                      {client.onboardingStatus == "invited" ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleReinvite(client.id)}
+                          className=""
+                        >
+                          <Mail className="h-4 w-4" />
+                          <span className="">Reinvite</span>
+                        </Button>
+                      ):(
+                        <>
+                        {client.onboardingStatus.charAt(0).toUpperCase() + client.onboardingStatus.slice(1)}
+                        </>
+                      )}
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">{formatDate(client.createdAt)}</TableCell>
+                    <TableCell className="hidden lg:table-cell">{formatDate(client.invitedAt)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-1 sm:gap-2">
                         <Button variant="link" size="sm" asChild className="h-auto p-0 text-xs sm:text-sm">

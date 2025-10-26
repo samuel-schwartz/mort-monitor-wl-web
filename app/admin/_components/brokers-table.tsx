@@ -16,15 +16,18 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { ArrowUpDown, Trash2 } from "lucide-react"
-import { deleteBroker } from "@/app/actions/brokers"
+import { deleteBroker } from "@/app/_actions/brokers"
 import { useRouter } from "next/navigation"
-import { toast } from "sonner"
 import { Broker } from "@/types/models"
+
+import { useToast } from "@/hooks/use-toast"
 
 type SortField = "name" | "company" | "email" | "clients" | "dateAdded"
 type SortDirection = "asc" | "desc"
 
 export function BrokersTable({ brokers }: { brokers: Broker[] }) {
+
+    const { toast } = useToast()
   const router = useRouter()
   const [sortField, setSortField] = useState<SortField>("name")
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
@@ -79,14 +82,14 @@ export function BrokersTable({ brokers }: { brokers: Broker[] }) {
     try {
       const result = await deleteBroker(brokerToDelete.id)
       if (result.success) {
-        toast.success("Broker deleted successfully")
+        toast({description:"Broker deleted successfully"})
         router.refresh()
         setDeleteDialogOpen(false)
       } else {
-        toast.error(result.error || "Failed to delete broker")
+        toast({description:result.error || "Failed to delete broker"})
       }
     } catch (error) {
-      toast.error("An unexpected error occurred")
+      toast({description:"An unexpected error occurred"})
     } finally {
       setIsDeleting(false)
       setBrokerToDelete(null)

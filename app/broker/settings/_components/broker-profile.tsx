@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { updateBroker } from "@/app/actions/brokers"
+import { updateBroker } from "@/app/_actions/brokers"
 import { useToast } from "@/hooks/use-toast"
 import { Eye, EyeOff, Check, X } from "lucide-react"
 import type { Broker } from "@/types/models"
-import type { AuthUser } from "@/app/actions/auth"
+import type { AuthUser } from "@/app/_actions/auth"
 
 interface BrokerProfileProps {
   broker: Broker | null

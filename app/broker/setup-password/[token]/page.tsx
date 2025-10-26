@@ -1,4 +1,4 @@
-import { validateToken } from "@/app/actions/tokens"
+import { validateToken } from "@/app/_actions/tokens"
 import { BrokerPasswordSetup } from "./_components/broker-password-setup"
 import { notFound } from "next/navigation"
 

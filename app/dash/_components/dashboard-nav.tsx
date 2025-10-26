@@ -1,5 +1,5 @@
 import { DashboardNavClient } from "./dashboard-nav-client"
-import type { AuthUser } from "@/app/actions/auth"
+import type { AuthUser } from "@/app/_actions/auth"
 import type { Property, Broker } from "@/types/models"
 
 interface DashboardNavProps {

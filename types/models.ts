@@ -49,7 +49,7 @@ export type Property = {
   originalLoanAmount: number
   loanBalance: number
   interestRate: number
-  loanTermYears: number
+  termLength: number
   monthlyPayment: number
   loanStartDate: string
   creditScore: string
@@ -64,11 +64,11 @@ export type Property = {
 export type Alert = {
   id: string
   propertyId: string
-  userId: string
   templateId: TemplateKind
   inputs: AlertInputs
-  active: boolean
-  snoozed: boolean
+  isActive: boolean
+  isSounding: boolean
+  isSnoozed: boolean
   snoozeUntil: string | null
   createdAt: string
   updatedAt?: string
@@ -90,11 +90,16 @@ export type Broker = {
 }
 
 /**
+ * Client Onboarding Status
+ */
+export type OnboardingStatus = "invited" | "onboarded"
+
+/**
  * Client information (end users managed by brokers)
  */
 export type Client = UserWithRole & {
   // Onboarding status
-  onboardingStatus: boolean
+  onboardingStatus: OnboardingStatus
   invitedAt: string
 }
 

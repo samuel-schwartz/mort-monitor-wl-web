@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { TrendingDown, Building2, Eye, EyeOff, Check, X } from "lucide-react"
-import { acceptInvitation } from "@/app/actions/tokens"
+import { acceptInvitation } from "@/app/_actions/tokens"
 import { Spinner } from "@/components/ui/spinner"
 import { useToast } from "@/hooks/use-toast"
 

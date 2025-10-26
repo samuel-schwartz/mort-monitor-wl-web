@@ -6,7 +6,7 @@
 
 import { revalidatePath } from "next/cache"
 import { apiClient } from "@/lib/api-client"
-import { getMockBroker, getMockBrokerAnalytics, getMockBrokerClients, MOCK_BROKERS } from "@/lib/mock-data"
+import { getMockBroker, getMockBrokerClients, MOCK_BROKERS } from "@/lib/mock-data"
 import { createSuccessResponse, createErrorResponse, validateInput, type ApiResponse } from "@/lib/utils/error-handler"
 import { brokerUpdateSchema, type BrokerInput, type BrokerUpdateInput } from "@/lib/validation/schemas"
 import type { Broker, BrokerAnalytics, ClientSummary } from "@/types/models"
@@ -106,14 +106,13 @@ export async function updateBroker(brokerId: string, input: BrokerUpdateInput): 
 
     const validatedInput = validation.data
 
-    const result = await apiClient.patch(`/brokers/${brokerId}`, validatedInput)
+    const result = await apiClient.patch(`/brokers/${brokerId}`, validatedInput, ()=>{})
 
     if (!result.success) {
       return createErrorResponse(result.error || "Failed to update broker")
     }
 
     revalidatePath("/broker/settings")
-    revalidatePath("/admin/brokers")
     return createSuccessResponse(undefined)
   } catch (error) {
     if (error instanceof Error) {
@@ -143,29 +142,6 @@ export async function deleteBroker(brokerId: string): Promise<ApiResponse<void>>
     return createErrorResponse("An unexpected error occurred")
   }
 }
-
-/**
- * Get broker analytics
- */
-export async function getBrokerAnalytics(brokerId: string): Promise<ApiResponse<BrokerAnalytics>> {
-  try {
-    const result = await apiClient.get<BrokerAnalytics>(`/brokers/${brokerId}/analytics`, () =>
-      getMockBrokerAnalytics(),
-    )
-
-    if (!result.success) {
-      return createErrorResponse(result.error || "Failed to fetch analytics")
-    }
-
-    return createSuccessResponse(result.data!)
-  } catch (error) {
-    if (error instanceof Error) {
-      return createErrorResponse(error.message)
-    }
-    return createErrorResponse("An unexpected error occurred")
-  }
-}
-
 /**
  * Get client summaries for broker dashboard
  */

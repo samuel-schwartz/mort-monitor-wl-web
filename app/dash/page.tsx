@@ -1,5 +1,4 @@
-import { getUserProperties } from "@/app/actions/properties"
-import { getCurrentUserId } from "@/lib/session"
+import { getUserProperties } from "@/app/_actions/properties"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Home, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,7 +9,7 @@ import { LoanInfoCard } from "./loan/[id]/_components/loan-info-card"
 import { RateChangeCard } from "./loan/[id]/_components/rate-change-card"
 
 export default async function DashboardPage() {
-  const userId = await getCurrentUserId()
+  const userId = "123"
   const propertiesResult = await getUserProperties(userId)
   const properties = propertiesResult.success ? propertiesResult.data || [] : []
 

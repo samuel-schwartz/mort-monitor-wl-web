@@ -9,7 +9,7 @@ import { useState } from "react"
 import SidebarAccount from "@/components/shared/sidebar-account"
 import { Broker, User } from "@/types/models"
 
-function NavContent({user, broker, onLinkClick }: {user: User, broker?: Broker, onLinkClick?: () => void }) {
+function NavContent({onLinkClick }: {onLinkClick?: () => void }) {
   const pathname = usePathname()
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + "/")
 
@@ -35,12 +35,12 @@ function NavContent({user, broker, onLinkClick }: {user: User, broker?: Broker, 
         </Link>
       </nav>
 
-      <SidebarAccount user={user} brandColor={broker?.brandColor} />
+      <SidebarAccount />
     </>
   )
 }
 
-export function AdminNav({user, broker}: {user: User, broker?: Broker}) {
+export function AdminNav() {
   const [open, setOpen] = useState(false)
 
   return (
@@ -55,14 +55,14 @@ export function AdminNav({user, broker}: {user: User, broker?: Broker}) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-64 p-0">
-            <NavContent user={user} broker={broker} onLinkClick={() => setOpen(false)} />
+            <NavContent onLinkClick={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
       </div>
 
       {/* Desktop sidebar */}
       <div className="hidden lg:block fixed inset-y-0 left-0 z-50 w-64 bg-card border-r">
-        <NavContent user={user} broker={broker} />
+        <NavContent />
       </div>
     </>
   )

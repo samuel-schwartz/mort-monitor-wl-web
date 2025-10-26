@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Building2, Mail, User, CheckCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { acceptInvitation } from "@/app/actions/tokens"
+import { acceptInvitation } from "@/app/_actions/tokens"
 import { getDaysUntilExpiration } from "@/lib/utils/tokens"
 import { inviteAcceptanceSchema } from "@/lib/validation/schemas"
 

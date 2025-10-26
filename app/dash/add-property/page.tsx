@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button"
 import { PropertyDetails } from "@/app/onboard/_components/property-details"
 import { AlertSelection } from "@/app/onboard/_components/alert-selection"
 import { useToast } from "@/hooks/use-toast"
-import { createProperty } from "@/app/actions/properties"
-import { createAlert } from "@/app/actions/alerts"
+import { createProperty } from "@/app/_actions/properties"
+import { createAlert } from "@/app/_actions/alerts"
 import type { AlertConfig } from "@/types/alerts"
 
 export default function AddPropertyPage() {

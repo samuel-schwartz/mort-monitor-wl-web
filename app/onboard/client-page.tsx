@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { TrendingDown } from "lucide-react"
 import { AccountSetup } from "./_components/account-setup"
-import { createUser } from "@/app/actions/users"
+import { createUser } from "@/app/_actions/users"
 import { Spinner } from "@/components/ui/spinner"
 
 export default function OnboardingClientPage() {
