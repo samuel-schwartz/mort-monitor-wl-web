@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { TrendingDown } from "lucide-react"
-import { AccountSetup } from "./_components/account-setup"
-import { createUser } from "@/app/_actions/users"
-import { Spinner } from "@/components/ui/spinner"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { TrendingDown } from "lucide-react";
+import { AccountSetup } from "./_components/account-setup";
+import { createUser } from "@/app/_actions/users";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function OnboardingClientPage() {
-  const router = useRouter()
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState("")
+  const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleAccountCreated = async () => {
-    setIsSubmitting(true)
-    setError("")
+    setIsSubmitting(true);
+    setError("");
 
     try {
       const result = await createUser({
@@ -26,12 +26,12 @@ export default function OnboardingClientPage() {
         lastName,
         email,
         password,
-      })
+      });
 
       if (!result.success) {
-        setError(result.error || "Failed to create account")
-        setIsSubmitting(false)
-        return
+        setError(result.error || "Failed to create account");
+        setIsSubmitting(false);
+        return;
       }
 
       // Pass user data to next step via URL params
@@ -40,18 +40,18 @@ export default function OnboardingClientPage() {
         firstName,
         lastName,
         email,
-      })
-      router.push(`/onboard/setup?${params.toString()}`)
+      });
+      router.push(`/onboard/setup?${params.toString()}`);
     } catch (err) {
-      console.error("[v0] Account creation failed:", err)
-      setError("An unexpected error occurred")
-      setIsSubmitting(false)
+      console.error("[v0] Account creation failed:", err);
+      setError("An unexpected error occurred");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleGoogleSignIn = async () => {
-    setIsSubmitting(true)
-    setError("")
+    setIsSubmitting(true);
+    setError("");
 
     try {
       // Create mock user with Google credentials for testing
@@ -60,12 +60,12 @@ export default function OnboardingClientPage() {
         lastName: "User",
         email: "google@example.com",
         password: "mock-google-password",
-      })
+      });
 
       if (!result.success) {
-        setError(result.error || "Failed to create account")
-        setIsSubmitting(false)
-        return
+        setError(result.error || "Failed to create account");
+        setIsSubmitting(false);
+        return;
       }
 
       // Pass user data to next step via URL params
@@ -74,14 +74,14 @@ export default function OnboardingClientPage() {
         firstName: "Google",
         lastName: "User",
         email: "google@example.com",
-      })
-      router.push(`/onboard/setup?${params.toString()}`)
+      });
+      router.push(`/onboard/setup?${params.toString()}`);
     } catch (err) {
-      console.error("[v0] Google sign-in failed:", err)
-      setError("An unexpected error occurred")
-      setIsSubmitting(false)
+      console.error("[v0] Google sign-in failed:", err);
+      setError("An unexpected error occurred");
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -98,7 +98,9 @@ export default function OnboardingClientPage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingDown className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">RefinanceAlert</h1>
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
+              RefinanceAlert
+            </h1>
           </div>
         </div>
       </header>
@@ -120,5 +122,5 @@ export default function OnboardingClientPage() {
         />
       </main>
     </div>
-  )
+  );
 }

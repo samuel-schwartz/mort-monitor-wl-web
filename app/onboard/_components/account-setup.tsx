@@ -1,27 +1,33 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { signupSchema } from "@/lib/validation/schemas"
+import type React from "react";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { signupSchema } from "@/lib/validation/schemas";
 
 interface Step1AccountProps {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  onFirstNameChange: (value: string) => void
-  onLastNameChange: (value: string) => void
-  onEmailChange: (value: string) => void
-  onPasswordChange: (value: string) => void
-  onNext: () => void
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  onFirstNameChange: (value: string) => void;
+  onLastNameChange: (value: string) => void;
+  onEmailChange: (value: string) => void;
+  onPasswordChange: (value: string) => void;
+  onNext: () => void;
   // Added error and isSubmitting props
-  error?: string
-  isSubmitting?: boolean
-  onGoogleSignIn?: () => void
+  error?: string;
+  isSubmitting?: boolean;
+  onGoogleSignIn?: () => void;
 }
 
 export function AccountSetup({
@@ -39,47 +45,61 @@ export function AccountSetup({
   isSubmitting,
   onGoogleSignIn,
 }: Step1AccountProps) {
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const isPasswordValid = password.length >= 8
-  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && password.trim() && isPasswordValid
+  const isPasswordValid = password.length >= 8;
+  const isFormValid =
+    firstName.trim() &&
+    lastName.trim() &&
+    email.trim() &&
+    password.trim() &&
+    isPasswordValid;
 
   const validateForm = () => {
-    const result = signupSchema.safeParse({ firstName, lastName, email, password })
+    const result = signupSchema.safeParse({
+      firstName,
+      lastName,
+      email,
+      password,
+    });
 
     if (!result.success) {
-      const newErrors: Record<string, string> = {}
+      const newErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
-        const field = err.path[0] as string
-        newErrors[field] = err.message
-      })
-      setErrors(newErrors)
-      return false
+        const field = err.path[0] as string;
+        newErrors[field] = err.message;
+      });
+      setErrors(newErrors);
+      return false;
     }
 
-    setErrors({})
-    return true
-  }
+    setErrors({});
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (validateForm()) {
-      onNext()
+      onNext();
     }
-  }
+  };
 
   const handleContinue = (e: React.MouseEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (validateForm()) {
-      onNext()
+      onNext();
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl sm:text-2xl">Create your account</CardTitle>
-        <CardDescription className="text-sm sm:text-base">Let's get started with your refinance alerts</CardDescription>
+        <CardTitle className="text-xl sm:text-2xl">
+          Create your account
+        </CardTitle>
+        <CardDescription className="text-sm sm:text-base">
+          Let's get started with your refinance alerts
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -87,13 +107,18 @@ export function AccountSetup({
             variant="outline"
             className="w-full h-11 sm:h-12 bg-transparent"
             onClick={(e) => {
-              e.preventDefault()
-              onGoogleSignIn?.()
+              e.preventDefault();
+              onGoogleSignIn?.();
             }}
             disabled={isSubmitting}
             aria-label="Sign up with Google"
           >
-            <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <svg
+              className="mr-2 h-4 w-4"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"
@@ -119,7 +144,9 @@ export function AccountSetup({
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with email
+              </span>
             </div>
           </div>
 
@@ -132,8 +159,8 @@ export function AccountSetup({
                 id="firstName"
                 value={firstName}
                 onChange={(e) => {
-                  onFirstNameChange(e.target.value)
-                  if (errors.firstName) setErrors({ ...errors, firstName: "" })
+                  onFirstNameChange(e.target.value);
+                  if (errors.firstName) setErrors({ ...errors, firstName: "" });
                 }}
                 placeholder="Enter your first name"
                 className="h-10"
@@ -141,10 +168,16 @@ export function AccountSetup({
                 autoFocus
                 required
                 aria-invalid={!!errors.firstName}
-                aria-describedby={errors.firstName ? "firstName-error" : undefined}
+                aria-describedby={
+                  errors.firstName ? "firstName-error" : undefined
+                }
               />
               {errors.firstName && (
-                <p id="firstName-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="firstName-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {errors.firstName}
                 </p>
               )}
@@ -157,18 +190,24 @@ export function AccountSetup({
                 id="lastName"
                 value={lastName}
                 onChange={(e) => {
-                  onLastNameChange(e.target.value)
-                  if (errors.lastName) setErrors({ ...errors, lastName: "" })
+                  onLastNameChange(e.target.value);
+                  if (errors.lastName) setErrors({ ...errors, lastName: "" });
                 }}
                 placeholder="Enter your last name"
                 className="h-10"
                 autoComplete="family-name"
                 required
                 aria-invalid={!!errors.lastName}
-                aria-describedby={errors.lastName ? "lastName-error" : undefined}
+                aria-describedby={
+                  errors.lastName ? "lastName-error" : undefined
+                }
               />
               {errors.lastName && (
-                <p id="lastName-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="lastName-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {errors.lastName}
                 </p>
               )}
@@ -185,8 +224,8 @@ export function AccountSetup({
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  onEmailChange(e.target.value)
-                  if (errors.email) setErrors({ ...errors, email: "" })
+                  onEmailChange(e.target.value);
+                  if (errors.email) setErrors({ ...errors, email: "" });
                 }}
                 placeholder="you@example.com"
                 className="h-10"
@@ -196,7 +235,11 @@ export function AccountSetup({
                 aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
-                <p id="email-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="email-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {errors.email}
                 </p>
               )}
@@ -210,8 +253,8 @@ export function AccountSetup({
                 type="password"
                 value={password}
                 onChange={(e) => {
-                  onPasswordChange(e.target.value)
-                  if (errors.password) setErrors({ ...errors, password: "" })
+                  onPasswordChange(e.target.value);
+                  if (errors.password) setErrors({ ...errors, password: "" });
                 }}
                 placeholder="Create a secure password"
                 className="h-10"
@@ -219,15 +262,23 @@ export function AccountSetup({
                 required
                 minLength={8}
                 aria-invalid={!!errors.password}
-                aria-describedby={errors.password ? "password-error" : undefined}
+                aria-describedby={
+                  errors.password ? "password-error" : undefined
+                }
               />
               {errors.password && (
-                <p id="password-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="password-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {errors.password}
                 </p>
               )}
               {!errors.password && password.length === 0 && (
-                <p className="text-sm text-muted-foreground">Must be at least 8 characters</p>
+                <p className="text-sm text-muted-foreground">
+                  Must be at least 8 characters
+                </p>
               )}
             </div>
           </div>
@@ -253,5 +304,5 @@ export function AccountSetup({
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

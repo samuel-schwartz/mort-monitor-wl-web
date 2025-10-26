@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useMemo, useState } from "react";
 import { FileText } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
@@ -125,33 +125,85 @@ function rangesForLoan(loanAmount: number) {
 
 const fields: Array<{ key: keyof Fees; label: string; group: string }> = [
   // 1) Loan & Lender
-  { key: "applicationProcessing", label: "Application / Processing Fee", group: "Loan & Lender Fees" },
-  { key: "underwriting", label: "Underwriting Fee", group: "Loan & Lender Fees" },
+  {
+    key: "applicationProcessing",
+    label: "Application / Processing Fee",
+    group: "Loan & Lender Fees",
+  },
+  {
+    key: "underwriting",
+    label: "Underwriting Fee",
+    group: "Loan & Lender Fees",
+  },
   { key: "origination", label: "Origination Fee", group: "Loan & Lender Fees" },
-  { key: "rateLock", label: "Rate Lock Fee (if any)", group: "Loan & Lender Fees" },
-  { key: "discountPoints", label: "Discount Points (optional)", group: "Loan & Lender Fees" },
+  {
+    key: "rateLock",
+    label: "Rate Lock Fee (if any)",
+    group: "Loan & Lender Fees",
+  },
+  {
+    key: "discountPoints",
+    label: "Discount Points (optional)",
+    group: "Loan & Lender Fees",
+  },
 
   // 2) Third-Party
   { key: "appraisal", label: "Appraisal Fee", group: "Third-Party Fees" },
-  { key: "creditReport", label: "Credit Report Fee", group: "Third-Party Fees" },
+  {
+    key: "creditReport",
+    label: "Credit Report Fee",
+    group: "Third-Party Fees",
+  },
   { key: "floodCert", label: "Flood Certification", group: "Third-Party Fees" },
   { key: "taxService", label: "Tax Service Fee", group: "Third-Party Fees" },
-  { key: "verification", label: "Verification Fee(s)", group: "Third-Party Fees" },
+  {
+    key: "verification",
+    label: "Verification Fee(s)",
+    group: "Third-Party Fees",
+  },
 
   // 3) Title & Closing
   { key: "titleSearch", label: "Title Search", group: "Title & Closing Fees" },
-  { key: "titleInsurance", label: "Title Insurance (Lender’s Policy)", group: "Title & Closing Fees" },
-  { key: "settlementClosing", label: "Settlement / Escrow / Closing Fee", group: "Title & Closing Fees" },
-  { key: "notaryRecordingService", label: "Notary / Recording Service Fee", group: "Title & Closing Fees" },
+  {
+    key: "titleInsurance",
+    label: "Title Insurance (Lender’s Policy)",
+    group: "Title & Closing Fees",
+  },
+  {
+    key: "settlementClosing",
+    label: "Settlement / Escrow / Closing Fee",
+    group: "Title & Closing Fees",
+  },
+  {
+    key: "notaryRecordingService",
+    label: "Notary / Recording Service Fee",
+    group: "Title & Closing Fees",
+  },
 
   // 4) Government
   { key: "recording", label: "Recording Fee", group: "Government Fees" },
-  { key: "transferTax", label: "Transfer Taxes (if applicable)", group: "Government Fees" },
+  {
+    key: "transferTax",
+    label: "Transfer Taxes (if applicable)",
+    group: "Government Fees",
+  },
 
   // 5) Prepaids & Escrows
-  { key: "prepaidInterest", label: "Prepaid Interest", group: "Prepaid Items & Escrows" },
-  { key: "escrowPropertyTaxes", label: "Property Taxes (escrow start)", group: "Prepaid Items & Escrows" },
-  { key: "escrowHomeownersIns", label: "Homeowners Insurance (escrow start)", group: "Prepaid Items & Escrows" },
+  {
+    key: "prepaidInterest",
+    label: "Prepaid Interest",
+    group: "Prepaid Items & Escrows",
+  },
+  {
+    key: "escrowPropertyTaxes",
+    label: "Property Taxes (escrow start)",
+    group: "Prepaid Items & Escrows",
+  },
+  {
+    key: "escrowHomeownersIns",
+    label: "Homeowners Insurance (escrow start)",
+    group: "Prepaid Items & Escrows",
+  },
 ];
 
 export default function EstimatedClosingCostsInline({
@@ -165,8 +217,9 @@ export default function EstimatedClosingCostsInline({
   const [expanded, setExpanded] = useState<boolean>(defaultExpanded);
 
   const total = useMemo(
-    () => Object.values(fees).reduce((sum, v) => sum + clampNonNeg(Number(v)), 0),
-    [fees]
+    () =>
+      Object.values(fees).reduce((sum, v) => sum + clampNonNeg(Number(v)), 0),
+    [fees],
   );
 
   return (
@@ -176,43 +229,64 @@ export default function EstimatedClosingCostsInline({
         <div className="flex items-center gap-3">
           <FileText className="h-5 w-5" />
           <div>
-            <Label className="text-base font-medium">Current Estimated Closing Costs</Label>
+            <Label className="text-base font-medium">
+              Current Estimated Closing Costs
+            </Label>
 
-            { expanded ? (<>
-            <p className="text-sm text-gray-500">From your inputs, updated when you make changes</p>
-            <div className="text-lg font-semibold">{currency(total)}</div>
-            </>) :
-            (
-            
-            <>
-            <p className="text-sm text-gray-500">Based on typical ranges, updated continiously</p>
-            <div className="text-lg font-semibold">{currency(total)}</div>
-            </>)
-
-            }
+            {expanded ? (
+              <>
+                <p className="text-sm text-gray-500">
+                  From your inputs, updated when you make changes
+                </p>
+                <div className="text-lg font-semibold">{currency(total)}</div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-gray-500">
+                  Based on typical ranges, updated continiously
+                </p>
+                <div className="text-lg font-semibold">{currency(total)}</div>
+              </>
+            )}
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="">
-            {expanded ? (<p>Turn off to use our regularly updated defaults</p>)
-            :(<><p>Manual override with your own numbers</p>
-            <p className="text-sm text-gray-500">Will not be updated with inflation.</p>
-            </>
+            {expanded ? (
+              <p>Turn off to use our regularly updated defaults</p>
+            ) : (
+              <>
+                <p>Manual override with your own numbers</p>
+                <p className="text-sm text-gray-500">
+                  Will not be updated with inflation.
+                </p>
+              </>
             )}
-            
-            
-            </div>
-          <Switch checked={expanded} onCheckedChange={setExpanded} aria-label="Toggle edit closing costs" />
+          </div>
+          <Switch
+            checked={expanded}
+            onCheckedChange={setExpanded}
+            aria-label="Toggle edit closing costs"
+          />
         </div>
       </div>
 
       {/* Expanded Editor */}
       {expanded ? (
-        <Expansion loanAmount={loanAmount} initialValues={initialValues} editable={expanded} onSave={onSave} />     
-    
+        <Expansion
+          loanAmount={loanAmount}
+          initialValues={initialValues}
+          editable={expanded}
+          onSave={onSave}
+        />
       ) : (
-        <Expansion loanAmount={loanAmount} initialValues={initialValues} editable={expanded} onSave={onSave} />     )
-      }
+        <Expansion
+          loanAmount={loanAmount}
+          initialValues={initialValues}
+          editable={expanded}
+          onSave={onSave}
+        />
+      )}
     </div>
   );
 }
@@ -224,31 +298,28 @@ type ExpProps = {
   onSave?: (fees: Fees, total: number) => void;
 };
 
-function Expansion({loanAmount,
-  initialValues,
-  editable,
-  onSave,
-}: ExpProps){
-
-    const baseDefaults = useMemo(() => defaultsForLoan(loanAmount), [loanAmount]);
+function Expansion({ loanAmount, initialValues, editable, onSave }: ExpProps) {
+  const baseDefaults = useMemo(() => defaultsForLoan(loanAmount), [loanAmount]);
   const [fees, setFees] = useState<Fees>({ ...baseDefaults, ...initialValues });
 
   const total = useMemo(
-    () => Object.values(fees).reduce((sum, v) => sum + clampNonNeg(Number(v)), 0),
-    [fees]
+    () =>
+      Object.values(fees).reduce((sum, v) => sum + clampNonNeg(Number(v)), 0),
+    [fees],
   );
 
-    const setField = (key: keyof Fees, raw: string) => {
+  const setField = (key: keyof Fees, raw: string) => {
     const num = Number(String(raw).replace(/[^\d.]/g, ""));
-    setFees((prev) => ({ ...prev, [key]: isFinite(num) ? Math.round(Math.max(0, num)) : 0 }));
+    setFees((prev) => ({
+      ...prev,
+      [key]: isFinite(num) ? Math.round(Math.max(0, num)) : 0,
+    }));
   };
 
   const resetToDefaults = () => setFees(defaultsForLoan(loanAmount));
   const handleSave = () => onSave?.(fees, total);
 
-    const ranges = useMemo(() => rangesForLoan(loanAmount), [loanAmount]);
-
-  
+  const ranges = useMemo(() => rangesForLoan(loanAmount), [loanAmount]);
 
   // Build groups for display
   const grouped = useMemo(() => {
@@ -260,18 +331,18 @@ function Expansion({loanAmount,
     return g;
   }, []);
 
-
-
   return (
     <>
-    <div className="p-4 border rounded-lg space-y-6">
-          <div className="text-sm text-gray-700">
-            Loan Amount: <strong>{currency(loanAmount)}</strong>
-          </div>
+      <div className="p-4 border rounded-lg space-y-6">
+        <div className="text-sm text-gray-700">
+          Loan Amount: <strong>{currency(loanAmount)}</strong>
+        </div>
 
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-base font-semibold">Total Closing Costs: {currency(total)}</div>
-            {editable && (
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-base font-semibold">
+            Total Closing Costs: {currency(total)}
+          </div>
+          {editable && (
             <div className="flex gap-2">
               <button
                 onClick={resetToDefaults}
@@ -286,46 +357,55 @@ function Expansion({loanAmount,
                 Save
               </button>
             </div>
-            )
-          }
-          </div>
-
-          {Object.entries(grouped).map(([group, items]) => (
-            <div key={group} className="space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-600">{group}</h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {items.map(({ key, label }) => (
-                  <div key={String(key)} className="rounded-lg border bg-white p-3">
-                    <Label htmlFor={`fee-${String(key)}`} className="text-sm font-medium">
-                      {label}
-                    </Label>
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="text-gray-500">$</span>
-                      <Input
-                        id={`fee-${String(key)}`}
-                        inputMode="decimal"
-                        readOnly={!editable}
-                        disabled={!editable}
-                        type="text"
-                        value={fees[key]}
-                        onChange={(e) => setField(key, e.target.value)}
-                        onBlur={(e) => setField(key, e.target.value)}
-                        placeholder="0"
-                        className="mt-0"
-                      />
-                    </div>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Range: {(ranges as Record<string, string>)[key as unknown as string]}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-
-
-
+          )}
         </div>
+
+        {Object.entries(grouped).map(([group, items]) => (
+          <div key={group} className="space-y-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-600">
+              {group}
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {items.map(({ key, label }) => (
+                <div
+                  key={String(key)}
+                  className="rounded-lg border bg-white p-3"
+                >
+                  <Label
+                    htmlFor={`fee-${String(key)}`}
+                    className="text-sm font-medium"
+                  >
+                    {label}
+                  </Label>
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="text-gray-500">$</span>
+                    <Input
+                      id={`fee-${String(key)}`}
+                      inputMode="decimal"
+                      readOnly={!editable}
+                      disabled={!editable}
+                      type="text"
+                      value={fees[key]}
+                      onChange={(e) => setField(key, e.target.value)}
+                      onBlur={(e) => setField(key, e.target.value)}
+                      placeholder="0"
+                      className="mt-0"
+                    />
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    Range:{" "}
+                    {
+                      (ranges as Record<string, string>)[
+                        key as unknown as string
+                      ]
+                    }
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </>
-  )
+  );
 }

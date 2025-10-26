@@ -1,75 +1,92 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect, useMemo, useState } from "react"
-import { useParams } from "next/navigation"
-import { Pencil, X, Save } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
+import { Pencil, X, Save } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 /** ---------- Helpers ---------- */
 function toNumber(v: any): number {
-  const n = typeof v === "number" ? v : Number.parseFloat(String(v).replace(/[^0-9.-]/g, ""))
-  return Number.isFinite(n) ? n : 0
+  const n =
+    typeof v === "number"
+      ? v
+      : Number.parseFloat(String(v).replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(n) ? n : 0;
 }
 function clamp(n: number, low: number, high: number) {
-  return Math.min(Math.max(n, low), high)
+  return Math.min(Math.max(n, low), high);
 }
-function monthlyPaymentPAndI(principal: number, annualRatePct: number, termYears: number): number {
-  const P = toNumber(principal)
-  const y = clamp(toNumber(termYears), 0.0001, 1000)
-  const r = toNumber(annualRatePct) / 100 / 12
-  const n = Math.round(y * 12)
-  if (P <= 0 || n <= 0) return 0
-  if (r === 0) return P / n
-  const f = Math.pow(1 + r, n)
-  return (P * r * f) / (f - 1)
+function monthlyPaymentPAndI(
+  principal: number,
+  annualRatePct: number,
+  termYears: number,
+): number {
+  const P = toNumber(principal);
+  const y = clamp(toNumber(termYears), 0.0001, 1000);
+  const r = toNumber(annualRatePct) / 100 / 12;
+  const n = Math.round(y * 12);
+  if (P <= 0 || n <= 0) return 0;
+  if (r === 0) return P / n;
+  const f = Math.pow(1 + r, n);
+  return (P * r * f) / (f - 1);
 }
-function remainingMonths(balance: number, annualRatePct: number, payment: number): number {
-  const B = toNumber(balance)
-  const r = toNumber(annualRatePct) / 100 / 12
-  const Pmt = toNumber(payment)
-  if (B <= 0 || Pmt <= 0) return 0
-  if (r === 0) return Math.ceil(B / Pmt)
-  const inside = 1 - (r * B) / Pmt
-  if (inside <= 0) return Number.POSITIVE_INFINITY
-  return Math.ceil(-Math.log(inside) / Math.log(1 + r))
+function remainingMonths(
+  balance: number,
+  annualRatePct: number,
+  payment: number,
+): number {
+  const B = toNumber(balance);
+  const r = toNumber(annualRatePct) / 100 / 12;
+  const Pmt = toNumber(payment);
+  if (B <= 0 || Pmt <= 0) return 0;
+  if (r === 0) return Math.ceil(B / Pmt);
+  const inside = 1 - (r * B) / Pmt;
+  if (inside <= 0) return Number.POSITIVE_INFINITY;
+  return Math.ceil(-Math.log(inside) / Math.log(1 + r));
 }
 function addMonths(date: Date, months: number): Date {
-  const d = new Date(date)
-  d.setMonth(d.getMonth() + months)
-  return d
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
 }
 function fmtCurrency(n: number) {
   return n.toLocaleString(undefined, {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
-  })
+  });
 }
 function fmtPercent(n: number) {
-  return `${n.toFixed(3).replace(/\.?0+$/, "")}%`
+  return `${n.toFixed(3).replace(/\.?0+$/, "")}%`;
 }
 function toISODateLocal(d: Date) {
-  const pad = (x: number) => String(x).padStart(2, "0")
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+  const pad = (x: number) => String(x).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
 /** ---------- Types & mock data (swap with real API) ---------- */
 type Loan = {
-  id: string
-  propertyAddress: string
-  propertyPrice: number
-  loanAmount: number
-  currentRate: number // APR %
-  termYears: number
-  startDate: string // yyyy-mm-dd
-  remainingBalance: number
-  taxesMonthly?: number
-  insuranceMonthly?: number
-  creditScore?: string
-}
+  id: string;
+  propertyAddress: string;
+  propertyPrice: number;
+  loanAmount: number;
+  currentRate: number; // APR %
+  termYears: number;
+  startDate: string; // yyyy-mm-dd
+  remainingBalance: number;
+  taxesMonthly?: number;
+  insuranceMonthly?: number;
+  creditScore?: string;
+};
 
 async function fetchLoan(loanId: string): Promise<Loan> {
   return {
@@ -84,90 +101,102 @@ async function fetchLoan(loanId: string): Promise<Loan> {
     taxesMonthly: 0,
     insuranceMonthly: 0,
     creditScore: "700-749",
-  }
+  };
 }
 
-async function updateLoan(loanId: string, updated: Partial<Loan>): Promise<{ ok: true }> {
-  console.info("PUT /api/loans/" + loanId, updated)
-  return { ok: true }
+async function updateLoan(
+  loanId: string,
+  updated: Partial<Loan>,
+): Promise<{ ok: true }> {
+  console.info("PUT /api/loans/" + loanId, updated);
+  return { ok: true };
 }
 
 /** ---------- Page ---------- */
 export default function LoanDetailsPage() {
-  const params = useParams<{ id: string }>()
-  const loanId = decodeURIComponent(params.id)
+  const params = useParams<{ id: string }>();
+  const loanId = decodeURIComponent(params.id);
 
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [loan, setLoan] = useState<Loan | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [loan, setLoan] = useState<Loan | null>(null);
 
   // edit mode via URL hash === '#edit'
-  const [editMode, setEditMode] = useState<boolean>(false)
+  const [editMode, setEditMode] = useState<boolean>(false);
   useEffect(() => {
-    const update = () => setEditMode(window.location.hash.toLowerCase() === "#edit")
-    update()
-    window.addEventListener("hashchange", update)
-    return () => window.removeEventListener("hashchange", update)
-  }, [])
+    const update = () =>
+      setEditMode(window.location.hash.toLowerCase() === "#edit");
+    update();
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
+  }, []);
 
   // Editable state
-  const [address, setAddress] = useState("")
-  const [propertyPrice, setPropertyPrice] = useState<number>(0)
-  const [loanAmount, setLoanAmount] = useState<number>(0)
-  const [rate, setRate] = useState<number>(0)
-  const [termYears, setTermYears] = useState<number>(30)
-  const [startDate, setStartDate] = useState<string>(toISODateLocal(new Date()))
-  const [balance, setBalance] = useState<number>(0)
-  const [creditScore, setCreditScore] = useState<string>("")
+  const [address, setAddress] = useState("");
+  const [propertyPrice, setPropertyPrice] = useState<number>(0);
+  const [loanAmount, setLoanAmount] = useState<number>(0);
+  const [rate, setRate] = useState<number>(0);
+  const [termYears, setTermYears] = useState<number>(30);
+  const [startDate, setStartDate] = useState<string>(
+    toISODateLocal(new Date()),
+  );
+  const [balance, setBalance] = useState<number>(0);
+  const [creditScore, setCreditScore] = useState<string>("");
 
   useEffect(() => {
-    ;(async () => {
-      setLoading(true)
-      const data = await fetchLoan(loanId)
-      setLoan(data)
+    (async () => {
+      setLoading(true);
+      const data = await fetchLoan(loanId);
+      setLoan(data);
 
-      setAddress(data.propertyAddress)
-      setPropertyPrice(data.propertyPrice)
-      setLoanAmount(data.loanAmount)
-      setRate(data.currentRate)
-      setTermYears(data.termYears)
-      setStartDate(data.startDate)
-      setBalance(data.remainingBalance)
-      setCreditScore(data.creditScore || "700-749")
+      setAddress(data.propertyAddress);
+      setPropertyPrice(data.propertyPrice);
+      setLoanAmount(data.loanAmount);
+      setRate(data.currentRate);
+      setTermYears(data.termYears);
+      setStartDate(data.startDate);
+      setBalance(data.remainingBalance);
+      setCreditScore(data.creditScore || "700-749");
 
-      setLoading(false)
-    })()
-  }, [loanId])
+      setLoading(false);
+    })();
+  }, [loanId]);
 
   // Derived calcs
   const minMonthlyPaymentPI = useMemo(
     () => monthlyPaymentPAndI(loanAmount, rate, termYears),
     [loanAmount, rate, termYears],
-  )
+  );
   const monthsRemaining = useMemo(() => {
-    const n = remainingMonths(balance, rate, minMonthlyPaymentPI)
-    return Number.isFinite(n) ? n : 0
-  }, [balance, rate, minMonthlyPaymentPI])
-  const forecastPayoffDate = useMemo(() => addMonths(new Date(), monthsRemaining), [monthsRemaining])
+    const n = remainingMonths(balance, rate, minMonthlyPaymentPI);
+    return Number.isFinite(n) ? n : 0;
+  }, [balance, rate, minMonthlyPaymentPI]);
+  const forecastPayoffDate = useMemo(
+    () => addMonths(new Date(), monthsRemaining),
+    [monthsRemaining],
+  );
   const futureInterestToPay = useMemo(() => {
-    if (monthsRemaining <= 0 || minMonthlyPaymentPI === 0) return 0
-    return Math.max(0, minMonthlyPaymentPI * monthsRemaining - balance)
-  }, [minMonthlyPaymentPI, monthsRemaining, balance])
+    if (monthsRemaining <= 0 || minMonthlyPaymentPI === 0) return 0;
+    return Math.max(0, minMonthlyPaymentPI * monthsRemaining - balance);
+  }, [minMonthlyPaymentPI, monthsRemaining, balance]);
   const totalMonthlyPITI = useMemo(
-    () => minMonthlyPaymentPI + toNumber(loan?.taxesMonthly ?? 0) + toNumber(loan?.insuranceMonthly ?? 0),
+    () =>
+      minMonthlyPaymentPI +
+      toNumber(loan?.taxesMonthly ?? 0) +
+      toNumber(loan?.insuranceMonthly ?? 0),
     [minMonthlyPaymentPI, loan],
-  )
+  );
 
   function enterEdit() {
-    if (typeof window !== "undefined") window.location.hash = "edit"
+    if (typeof window !== "undefined") window.location.hash = "edit";
   }
   function exitEdit() {
-    if (typeof window !== "undefined") window.location.hash = ""
+    if (typeof window !== "undefined") window.location.hash = "";
   }
 
   async function onSave() {
-    if (!loan) return
-    setSaving(true)
+    if (!loan) return;
+    setSaving(true);
     const payload: Partial<Loan> = {
       propertyAddress: address,
       propertyPrice,
@@ -177,12 +206,12 @@ export default function LoanDetailsPage() {
       startDate,
       remainingBalance: balance,
       creditScore,
-    }
-    await updateLoan(loan.id, payload)
-    setLoan({ ...loan, ...payload })
-    setSaving(false)
+    };
+    await updateLoan(loan.id, payload);
+    setLoan({ ...loan, ...payload });
+    setSaving(false);
     // Exit edit mode after successful save
-    exitEdit()
+    exitEdit();
   }
 
   if (loading || !loan) {
@@ -194,7 +223,7 @@ export default function LoanDetailsPage() {
           <div className="h-64 rounded bg-gray-100" />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -254,7 +283,9 @@ export default function LoanDetailsPage() {
                       <SelectItem value="700-749">700-749 (Good)</SelectItem>
                       <SelectItem value="650-699">650-699 (Fair)</SelectItem>
                       <SelectItem value="600-649">600-649 (Poor)</SelectItem>
-                      <SelectItem value="below-600">Below 600 (Very Poor)</SelectItem>
+                      <SelectItem value="below-600">
+                        Below 600 (Very Poor)
+                      </SelectItem>
                       <SelectItem value="Unsure">Not Sure</SelectItem>
                     </SelectContent>
                   </Select>
@@ -329,7 +360,9 @@ export default function LoanDetailsPage() {
                 label="Start / First Payment Date"
                 edit={editMode}
                 full
-                valueNode={<span>{new Date(startDate).toLocaleDateString()}</span>}
+                valueNode={
+                  <span>{new Date(startDate).toLocaleDateString()}</span>
+                }
                 inputNode={
                   <input
                     type="date"
@@ -347,19 +380,37 @@ export default function LoanDetailsPage() {
         <aside className="lg:col-span-2 space-y-5">
           <Panel title="Calculated">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Stat label="Min. Monthly Payment (P&I)" value={fmtCurrency(minMonthlyPaymentPI)} />
-              <Stat label="Total Monthly (PITI est.)" value={fmtCurrency(totalMonthlyPITI)} hint="Taxes/ins=0 here" />
+              <Stat
+                label="Min. Monthly Payment (P&I)"
+                value={fmtCurrency(minMonthlyPaymentPI)}
+              />
+              <Stat
+                label="Total Monthly (PITI est.)"
+                value={fmtCurrency(totalMonthlyPITI)}
+                hint="Taxes/ins=0 here"
+              />
               <Stat
                 label="Months Remaining"
-                value={monthsRemaining === Number.POSITIVE_INFINITY ? "∞" : `${monthsRemaining}`}
+                value={
+                  monthsRemaining === Number.POSITIVE_INFINITY
+                    ? "∞"
+                    : `${monthsRemaining}`
+                }
               />
-              <Stat label="Future Interest To Pay" value={fmtCurrency(futureInterestToPay)} />
+              <Stat
+                label="Future Interest To Pay"
+                value={fmtCurrency(futureInterestToPay)}
+              />
               <Stat label="Current APR" value={fmtPercent(rate)} />
-              <Stat label="Forecasted Payoff" value={forecastPayoffDate.toLocaleDateString()} />
+              <Stat
+                label="Forecasted Payoff"
+                value={forecastPayoffDate.toLocaleDateString()}
+              />
             </div>
             {monthsRemaining === Number.POSITIVE_INFINITY && (
               <p className="mt-2 text-xs text-red-600">
-                Payment too low to amortize at this rate; increase payment or reduce balance.
+                Payment too low to amortize at this rate; increase payment or
+                reduce balance.
               </p>
             )}
           </Panel>
@@ -400,7 +451,7 @@ export default function LoanDetailsPage() {
         </aside>
       </div>
     </main>
-  )
+  );
 }
 
 /** ---------- Small UI primitives ---------- */
@@ -408,15 +459,15 @@ function Panel({
   title,
   children,
 }: {
-  title: string
-  children: React.ReactNode
+  title: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className="rounded-2xl border p-4 md:p-5 shadow-sm">
       <h2 className="text-lg font-semibold mb-3">{title}</h2>
       {children}
     </div>
-  )
+  );
 }
 
 function Field({
@@ -426,18 +477,18 @@ function Field({
   edit,
   full,
 }: {
-  label: string
-  valueNode: React.ReactNode
-  inputNode: React.ReactNode
-  edit: boolean
-  full?: boolean
+  label: string;
+  valueNode: React.ReactNode;
+  inputNode: React.ReactNode;
+  edit: boolean;
+  full?: boolean;
 }) {
   return (
     <label className={`grid gap-1 ${full ? "md:col-span-2" : ""}`}>
       <span className="text-sm text-gray-600">{label}</span>
       {edit ? inputNode : <span className="py-2">{valueNode}</span>}
     </label>
-  )
+  );
 }
 
 function Stat({
@@ -445,9 +496,9 @@ function Stat({
   value,
   hint,
 }: {
-  label: string
-  value: string
-  hint?: string
+  label: string;
+  value: string;
+  hint?: string;
 }) {
   return (
     <div className="rounded-xl border p-3">
@@ -455,5 +506,5 @@ function Stat({
       <p className="text-2xl font-bold">{value}</p>
       {hint ? <p className="text-[11px] text-gray-500 mt-1">{hint}</p> : null}
     </div>
-  )
+  );
 }

@@ -1,18 +1,18 @@
-import { getAllBrokers } from "@/app/_actions/brokers"
-import { Button } from "@/components/ui/button"
-import { Building2, Plus } from "lucide-react"
-import { BrokersTable } from "./_components/brokers-table"
-import Link from "next/link"
-import type { Metadata } from "next"
+import { getAllBrokers } from "@/app/_actions/brokers";
+import { Button } from "@/components/ui/button";
+import { Building2, Plus } from "lucide-react";
+import { BrokersTable } from "./_components/brokers-table";
+import Link from "next/link";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
   description: "Manage broker accounts and platform settings",
-}
+};
 
 export default async function AdminDashboardPage() {
-  const brokersResult = await getAllBrokers()
-  const brokers = brokersResult.success ? brokersResult.data || [] : []
+  const brokersResult = await getAllBrokers();
+  const brokers = brokersResult.success ? brokersResult.data || [] : [];
 
   return (
     <div className="space-y-6">
@@ -20,7 +20,8 @@ export default async function AdminDashboardPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Brokers</h1>
           <p className="text-muted-foreground mt-1">
-            {brokers.length} {brokers.length === 1 ? "broker" : "brokers"} on the platform
+            {brokers.length} {brokers.length === 1 ? "broker" : "brokers"} on
+            the platform
           </p>
         </div>
         <Link href="/admin/brokers/new">
@@ -53,5 +54,5 @@ export default async function AdminDashboardPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

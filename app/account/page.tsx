@@ -1,16 +1,16 @@
-import { AccountSettings } from "@/app/account/_components/account-settings"
-import { getBroker } from "@/app/_actions/brokers"
-import { BackButton } from "./_components/back-button"
-import { getUser } from "../_actions/auth"
+import { AccountSettings } from "@/app/account/_components/account-settings";
+import { getBroker } from "@/app/_actions/brokers";
+import { BackButton } from "./_components/back-button";
+import { getUser } from "../_actions/auth";
 
 export default async function AccountPage() {
-  const user = await getUser()
+  const user = await getUser();
 
-  let brandColor: string | undefined
+  let brandColor: string | undefined;
   if (user && "brokerId" in user && user.brokerId) {
-    const brokerResult = await getBroker(user.brokerId)
+    const brokerResult = await getBroker(user.brokerId);
     if (brokerResult.success && brokerResult.data) {
-      brandColor = brokerResult.data.brandColor
+      brandColor = brokerResult.data.brandColor;
     }
   }
 
@@ -22,10 +22,12 @@ export default async function AccountPage() {
         </div>
         <div>
           <h1 className="text-3xl font-bold">Account Settings</h1>
-          <p className="text-muted-foreground mt-2">Manage your personal account settings and preferences</p>
+          <p className="text-muted-foreground mt-2">
+            Manage your personal account settings and preferences
+          </p>
         </div>
         <AccountSettings user={user} />
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
@@ -7,5 +7,5 @@ export default function Loading() {
         <Skeleton className="h-[700px] max-w-3xl mx-auto" />
       </div>
     </div>
-  )
+  );
 }

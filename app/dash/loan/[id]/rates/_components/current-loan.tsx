@@ -1,26 +1,32 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 0,
-  }).format(amount)
-}
+  }).format(amount);
+};
 
 type CurrentLoanProps = {
   loan: {
-    balance: number
-    rate: number
-    monthlyPayment: number
-    remainingTerm: number
-    lender?: string
-  }
+    balance: number;
+    rate: number;
+    monthlyPayment: number;
+    remainingTerm: number;
+    lender?: string;
+  };
   property: {
-    value: number
-    address: string
-  }
-}
+    value: number;
+    address: string;
+  };
+};
 
 export function CurrentLoan({ loan, property }: CurrentLoanProps) {
   return (
@@ -41,7 +47,9 @@ export function CurrentLoan({ loan, property }: CurrentLoanProps) {
           </div>
           <div>
             <p className="text-sm text-gray-500">Monthly Payment</p>
-            <p className="text-2xl font-bold">{formatCurrency(loan.monthlyPayment)}</p>
+            <p className="text-2xl font-bold">
+              {formatCurrency(loan.monthlyPayment)}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Remaining Term</p>
@@ -50,10 +58,11 @@ export function CurrentLoan({ loan, property }: CurrentLoanProps) {
         </div>
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Property: {property.address} • Value: {formatCurrency(property.value)}
+            Property: {property.address} • Value:{" "}
+            {formatCurrency(property.value)}
           </p>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

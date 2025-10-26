@@ -1,85 +1,100 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TrendingDown } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { loginSchema } from "@/lib/validation/schemas"
-import { authenticateUser } from "@/app/_actions/auth"
+import type React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TrendingDown } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { loginSchema } from "@/lib/validation/schemas";
+import { authenticateUser } from "@/app/_actions/auth";
 
-type UserRole = "client" | "broker" | "admin"
+type UserRole = "client" | "broker" | "admin";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [role, setRole] = useState<UserRole>("client")
-  const [error, setError] = useState("")
-  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<UserRole>("client");
+  const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const validateField = (field: "email" | "password", value: string) => {
-    const result = loginSchema.safeParse({ email, password, [field]: value })
+    const result = loginSchema.safeParse({ email, password, [field]: value });
     if (!result.success) {
-      const fieldError = result.error.errors.find((e) => e.path[0] === field)
+      const fieldError = result.error.errors.find((e) => e.path[0] === field);
       if (fieldError) {
-        setFieldErrors((prev) => ({ ...prev, [field]: fieldError.message }))
+        setFieldErrors((prev) => ({ ...prev, [field]: fieldError.message }));
       }
     } else {
-      setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setFieldErrors({})
+    e.preventDefault();
+    setError("");
+    setFieldErrors({});
 
-    const result = loginSchema.safeParse({ email, password })
+    const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
-      const errors: { email?: string; password?: string } = {}
+      const errors: { email?: string; password?: string } = {};
       result.error.errors.forEach((err) => {
-        const field = err.path[0] as "email" | "password"
-        errors[field] = err.message
-      })
-      setFieldErrors(errors)
-      return
+        const field = err.path[0] as "email" | "password";
+        errors[field] = err.message;
+      });
+      setFieldErrors(errors);
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const authResult = await authenticateUser(email, password, role)
+      const authResult = await authenticateUser(email, password, role);
 
       if (!authResult.success) {
-        setError(authResult.error || "Authentication failed")
-        setIsLoading(false)
-        return
+        setError(authResult.error || "Authentication failed");
+        setIsLoading(false);
+        return;
       }
 
       switch (role) {
         case "admin":
-          router.push("/admin")
-          break
+          router.push("/admin");
+          break;
         case "broker":
-          router.push("/broker")
-          break
+          router.push("/broker");
+          break;
         case "client":
         default:
-          router.push("/dash")
-          break
+          router.push("/dash");
+          break;
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
-      setIsLoading(false)
+      setError("An error occurred. Please try again.");
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
@@ -93,8 +108,13 @@ export default function LoginPage() {
       <Card className="w-full max-w-md" id="main-content">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <TrendingDown className="h-8 w-8 text-blue-600" aria-hidden="true" />
-            <span className="text-xl sm:text-2xl font-bold text-foreground">MortMonitor</span>
+            <TrendingDown
+              className="h-8 w-8 text-blue-600"
+              aria-hidden="true"
+            />
+            <span className="text-xl sm:text-2xl font-bold text-foreground">
+              MortMonitor
+            </span>
           </div>
           <CardTitle className="text-xl sm:text-2xl">Welcome Back</CardTitle>
           <CardDescription className="text-sm sm:text-base">
@@ -106,32 +126,41 @@ export default function LoginPage() {
             variant="outline"
             className="w-full h-11 sm:h-10 bg-transparent"
             onClick={async () => {
-              setIsLoading(true)
+              setIsLoading(true);
               try {
-                const authResult = await authenticateUser("google@example.com", "mock-password", role)
+                const authResult = await authenticateUser(
+                  "google@example.com",
+                  "mock-password",
+                  role,
+                );
                 if (authResult.success) {
                   switch (role) {
                     case "admin":
-                      router.push("/admin")
-                      break
+                      router.push("/admin");
+                      break;
                     case "broker":
-                      router.push("/broker")
-                      break
+                      router.push("/broker");
+                      break;
                     case "client":
                     default:
-                      router.push("/dash")
-                      break
+                      router.push("/dash");
+                      break;
                   }
                 }
               } catch (error) {
-                setError("An error occurred. Please try again.")
-                setIsLoading(false)
+                setError("An error occurred. Please try again.");
+                setIsLoading(false);
               }
             }}
             disabled={isLoading}
             aria-label="Sign in with Google"
           >
-            <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <svg
+              className="mr-2 h-4 w-4"
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                 fill="#4285F4"
@@ -157,7 +186,9 @@ export default function LoginPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with email
+              </span>
             </div>
           </div>
 
@@ -175,7 +206,10 @@ export default function LoginPage() {
             <Label htmlFor="role" className="text-sm sm:text-base">
               Sign in as
             </Label>
-            <Select value={role} onValueChange={(value: UserRole) => setRole(value)}>
+            <Select
+              value={role}
+              onValueChange={(value: UserRole) => setRole(value)}
+            >
               <SelectTrigger id="role">
                 <SelectValue />
               </SelectTrigger>
@@ -199,8 +233,9 @@ export default function LoginPage() {
                 className="h-11 sm:h-10"
                 value={email}
                 onChange={(e) => {
-                  setEmail(e.target.value)
-                  if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }))
+                  setEmail(e.target.value);
+                  if (fieldErrors.email)
+                    setFieldErrors((prev) => ({ ...prev, email: undefined }));
                 }}
                 onBlur={() => validateField("email", email)}
                 required
@@ -209,7 +244,11 @@ export default function LoginPage() {
                 aria-describedby={fieldErrors.email ? "email-error" : undefined}
               />
               {fieldErrors.email && (
-                <p id="email-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="email-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {fieldErrors.email}
                 </p>
               )}
@@ -225,17 +264,27 @@ export default function LoginPage() {
                 className="h-11 sm:h-10"
                 value={password}
                 onChange={(e) => {
-                  setPassword(e.target.value)
-                  if (fieldErrors.password) setFieldErrors((prev) => ({ ...prev, password: undefined }))
+                  setPassword(e.target.value);
+                  if (fieldErrors.password)
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      password: undefined,
+                    }));
                 }}
                 onBlur={() => validateField("password", password)}
                 required
                 disabled={isLoading}
                 aria-invalid={!!fieldErrors.password}
-                aria-describedby={fieldErrors.password ? "password-error" : undefined}
+                aria-describedby={
+                  fieldErrors.password ? "password-error" : undefined
+                }
               />
               {fieldErrors.password && (
-                <p id="password-error" className="text-sm text-destructive" role="alert">
+                <p
+                  id="password-error"
+                  className="text-sm text-destructive"
+                  role="alert"
+                >
                   {fieldErrors.password}
                 </p>
               )}
@@ -270,5 +319,5 @@ export default function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

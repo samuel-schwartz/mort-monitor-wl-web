@@ -1,16 +1,28 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MonthYearPicker } from "@/components/shared/month-year-picker"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { InfoIcon } from "lucide-react"
-import { toNumber } from "@/lib/finance/calculations"
+import type React from "react";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MonthYearPicker } from "@/components/shared/month-year-picker";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
+import { toNumber } from "@/lib/finance/calculations";
 
 const US_STATES = [
   { value: "AL", label: "Alabama" },
@@ -63,39 +75,39 @@ const US_STATES = [
   { value: "WV", label: "West Virginia" },
   { value: "WI", label: "Wisconsin" },
   { value: "WY", label: "Wyoming" },
-]
+];
 
 interface Step3PersonalizeProps {
-  firstName: string
-  propertyAddress: string
-  propertyCity: string
-  propertyState: string
-  propertyZip: string
-  propertyPrice: string
-  originalLoanAmount: string
-  currentBalance: string
-  interestRate: string
-  termLength: string
-  startMonth: string
-  startYear: string
-  monthlyPayment: string
-  creditScore: string
-  onPropertyAddressChange: (value: string) => void
-  onPropertyCityChange: (value: string) => void
-  onPropertyStateChange: (value: string) => void
-  onPropertyZipChange: (value: string) => void
-  onPropertyPriceChange: (value: string) => void
-  onOriginalLoanAmountChange: (value: string) => void
-  onCurrentBalanceChange: (value: string) => void
-  onInterestRateChange: (value: string) => void
-  onTermLengthChange: (value: string) => void
-  onStartMonthChange: (value: string) => void
-  onStartYearChange: (value: string) => void
-  onMonthlyPaymentChange: (value: string) => void
-  onCreditScoreChange: (value: string) => void
-  onNext: () => void
-  onBack: () => void
-  showCreditScore?: boolean
+  firstName: string;
+  propertyAddress: string;
+  propertyCity: string;
+  propertyState: string;
+  propertyZip: string;
+  propertyPrice: string;
+  originalLoanAmount: string;
+  currentBalance: string;
+  interestRate: string;
+  termLength: string;
+  startMonth: string;
+  startYear: string;
+  monthlyPayment: string;
+  creditScore: string;
+  onPropertyAddressChange: (value: string) => void;
+  onPropertyCityChange: (value: string) => void;
+  onPropertyStateChange: (value: string) => void;
+  onPropertyZipChange: (value: string) => void;
+  onPropertyPriceChange: (value: string) => void;
+  onOriginalLoanAmountChange: (value: string) => void;
+  onCurrentBalanceChange: (value: string) => void;
+  onInterestRateChange: (value: string) => void;
+  onTermLengthChange: (value: string) => void;
+  onStartMonthChange: (value: string) => void;
+  onStartYearChange: (value: string) => void;
+  onMonthlyPaymentChange: (value: string) => void;
+  onCreditScoreChange: (value: string) => void;
+  onNext: () => void;
+  onBack: () => void;
+  showCreditScore?: boolean;
 }
 
 export function PropertyDetails({
@@ -130,76 +142,96 @@ export function PropertyDetails({
   onBack,
   showCreditScore = true,
 }: Step3PersonalizeProps) {
-  const [loanStage, setLoanStage] = useState<1 | 2>(1)
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [termType, setTermType] = useState<"30" | "15" | "other" | "">("")
+  const [loanStage, setLoanStage] = useState<1 | 2>(1);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [termType, setTermType] = useState<"30" | "15" | "other" | "">("");
 
-  const handleCurrencyInput = (value: string, onChange: (value: string) => void) => {
-    const numericValue = value.replace(/[^0-9]/g, "")
-    onChange(numericValue)
-  }
+  const handleCurrencyInput = (
+    value: string,
+    onChange: (value: string) => void,
+  ) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    onChange(numericValue);
+  };
 
-  const handleNumericInput = (value: string, onChange: (value: string) => void, allowDecimal = false) => {
-    const pattern = allowDecimal ? /[^0-9.]/g : /[^0-9]/g
-    const numericValue = value.replace(pattern, "")
-    if (allowDecimal && numericValue.split(".").length > 2) return
-    onChange(numericValue)
-  }
+  const handleNumericInput = (
+    value: string,
+    onChange: (value: string) => void,
+    allowDecimal = false,
+  ) => {
+    const pattern = allowDecimal ? /[^0-9.]/g : /[^0-9]/g;
+    const numericValue = value.replace(pattern, "");
+    if (allowDecimal && numericValue.split(".").length > 2) return;
+    onChange(numericValue);
+  };
 
   const calculateDerivedValues = () => {
-    const principal = toNumber(originalLoanAmount)
-    const payment = toNumber(monthlyPayment)
-    const term = toNumber(termLength)
+    const principal = toNumber(originalLoanAmount);
+    const payment = toNumber(monthlyPayment);
+    const term = toNumber(termLength);
 
-    if (principal <= 0 || payment <= 0 || term <= 0) return
+    if (principal <= 0 || payment <= 0 || term <= 0) return;
 
-    const firstPaymentDate = new Date(Number.parseInt(startYear), Number.parseInt(startMonth) - 1, 1)
-    const now = new Date()
+    const firstPaymentDate = new Date(
+      Number.parseInt(startYear),
+      Number.parseInt(startMonth) - 1,
+      1,
+    );
+    const now = new Date();
     const monthsPassed =
-      (now.getFullYear() - firstPaymentDate.getFullYear()) * 12 + (now.getMonth() - firstPaymentDate.getMonth())
+      (now.getFullYear() - firstPaymentDate.getFullYear()) * 12 +
+      (now.getMonth() - firstPaymentDate.getMonth());
 
     if (!interestRate) {
-      onInterestRateChange("6.5")
+      onInterestRateChange("6.5");
     }
 
-    const rate = toNumber(interestRate || "6.5") / 100 / 12
-    const totalMonths = term * 12
-    const monthsRemaining = Math.max(0, totalMonths - monthsPassed)
+    const rate = toNumber(interestRate || "6.5") / 100 / 12;
+    const totalMonths = term * 12;
+    const monthsRemaining = Math.max(0, totalMonths - monthsPassed);
 
     if (rate > 0 && monthsRemaining > 0) {
       const remainingBalance =
-        payment * ((Math.pow(1 + rate, monthsRemaining) - 1) / (rate * Math.pow(1 + rate, monthsRemaining)))
-      onCurrentBalanceChange(Math.round(remainingBalance).toString())
+        payment *
+        ((Math.pow(1 + rate, monthsRemaining) - 1) /
+          (rate * Math.pow(1 + rate, monthsRemaining)));
+      onCurrentBalanceChange(Math.round(remainingBalance).toString());
     } else if (monthsRemaining > 0) {
-      onCurrentBalanceChange(Math.round(payment * monthsRemaining).toString())
+      onCurrentBalanceChange(Math.round(payment * monthsRemaining).toString());
     }
-  }
+  };
 
   const handleStage1Continue = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
-    if (!propertyAddress.trim()) newErrors.propertyAddress = "Street address is required"
-    if (!propertyCity.trim()) newErrors.propertyCity = "City is required"
-    if (!propertyState) newErrors.propertyState = "State is required"
-    if (!propertyZip || propertyZip.length !== 5) newErrors.propertyZip = "Valid 5-digit ZIP code is required"
-    if (!propertyPrice || Number.parseFloat(propertyPrice) <= 0) newErrors.propertyPrice = "Property price is required"
+    if (!propertyAddress.trim())
+      newErrors.propertyAddress = "Street address is required";
+    if (!propertyCity.trim()) newErrors.propertyCity = "City is required";
+    if (!propertyState) newErrors.propertyState = "State is required";
+    if (!propertyZip || propertyZip.length !== 5)
+      newErrors.propertyZip = "Valid 5-digit ZIP code is required";
+    if (!propertyPrice || Number.parseFloat(propertyPrice) <= 0)
+      newErrors.propertyPrice = "Property price is required";
     if (!originalLoanAmount || Number.parseFloat(originalLoanAmount) <= 0)
-      newErrors.originalLoanAmount = "Original loan amount is required"
-    if (!termLength || Number.parseInt(termLength) <= 0) newErrors.termLength = "Term length is required"
+      newErrors.originalLoanAmount = "Original loan amount is required";
+    if (!termLength || Number.parseInt(termLength) <= 0)
+      newErrors.termLength = "Term length is required";
     if (!monthlyPayment || Number.parseFloat(monthlyPayment) <= 0)
-      newErrors.monthlyPayment = "Monthly payment is required"
-    if (!startMonth || !startYear) newErrors.startDate = "First payment date is required"
-    if (showCreditScore && !creditScore) newErrors.creditScore = "Credit score is required"
+      newErrors.monthlyPayment = "Monthly payment is required";
+    if (!startMonth || !startYear)
+      newErrors.startDate = "First payment date is required";
+    if (showCreditScore && !creditScore)
+      newErrors.creditScore = "Credit score is required";
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
-    setErrors({})
-    calculateDerivedValues()
-    setLoanStage(2)
-  }
+    setErrors({});
+    calculateDerivedValues();
+    setLoanStage(2);
+  };
 
   const isStage1Complete =
     propertyAddress &&
@@ -212,26 +244,27 @@ export function PropertyDetails({
     termLength &&
     monthlyPayment &&
     startMonth &&
-    startYear
+    startYear;
 
   const handleContinue = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
     if (loanStage === 1) {
-      handleStage1Continue()
-      return
+      handleStage1Continue();
+      return;
     }
 
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     if (!currentBalance || Number.parseFloat(currentBalance) <= 0)
-      newErrors.currentBalance = "Current balance is required"
-    if (!interestRate || Number.parseFloat(interestRate) <= 0) newErrors.interestRate = "Interest rate is required"
+      newErrors.currentBalance = "Current balance is required";
+    if (!interestRate || Number.parseFloat(interestRate) <= 0)
+      newErrors.interestRate = "Interest rate is required";
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
     const isValid =
@@ -243,25 +276,28 @@ export function PropertyDetails({
       currentBalance &&
       interestRate &&
       monthlyPayment &&
-      (!showCreditScore || creditScore)
+      (!showCreditScore || creditScore);
 
     if (isValid) {
-      setErrors({})
-      onNext()
+      setErrors({});
+      onNext();
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-xl sm:text-2xl">Awesome, Let's Go!</CardTitle>
+        <CardTitle className="text-xl sm:text-2xl">
+          Awesome, Let's Go!
+        </CardTitle>
         <CardDescription className="text-sm sm:text-base">
-          Let's personalize refinance alerts for {firstName} with specific property and loan details
+          Let's personalize refinance alerts for {firstName} with specific
+          property and loan details
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -278,8 +314,9 @@ export function PropertyDetails({
                   type="text"
                   value={propertyAddress}
                   onChange={(e) => {
-                    onPropertyAddressChange(e.target.value)
-                    if (errors.propertyAddress) setErrors({ ...errors, propertyAddress: "" })
+                    onPropertyAddressChange(e.target.value);
+                    if (errors.propertyAddress)
+                      setErrors({ ...errors, propertyAddress: "" });
                   }}
                   placeholder="123 Main Street"
                   className="h-11 sm:h-10"
@@ -287,7 +324,11 @@ export function PropertyDetails({
                   required
                   aria-invalid={!!errors.propertyAddress}
                 />
-                {errors.propertyAddress && <p className="text-sm text-destructive">{errors.propertyAddress}</p>}
+                {errors.propertyAddress && (
+                  <p className="text-sm text-destructive">
+                    {errors.propertyAddress}
+                  </p>
+                )}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-2 sm:col-span-1">
@@ -299,15 +340,20 @@ export function PropertyDetails({
                     type="text"
                     value={propertyCity}
                     onChange={(e) => {
-                      onPropertyCityChange(e.target.value)
-                      if (errors.propertyCity) setErrors({ ...errors, propertyCity: "" })
+                      onPropertyCityChange(e.target.value);
+                      if (errors.propertyCity)
+                        setErrors({ ...errors, propertyCity: "" });
                     }}
                     placeholder="San Francisco"
                     className="h-11 sm:h-10"
                     required
                     aria-invalid={!!errors.propertyCity}
                   />
-                  {errors.propertyCity && <p className="text-sm text-destructive">{errors.propertyCity}</p>}
+                  {errors.propertyCity && (
+                    <p className="text-sm text-destructive">
+                      {errors.propertyCity}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="state" className="text-sm sm:text-base">
@@ -316,8 +362,9 @@ export function PropertyDetails({
                   <Select
                     value={propertyState}
                     onValueChange={(value) => {
-                      onPropertyStateChange(value)
-                      if (errors.propertyState) setErrors({ ...errors, propertyState: "" })
+                      onPropertyStateChange(value);
+                      if (errors.propertyState)
+                        setErrors({ ...errors, propertyState: "" });
                     }}
                     required
                   >
@@ -336,7 +383,11 @@ export function PropertyDetails({
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.propertyState && <p className="text-sm text-destructive">{errors.propertyState}</p>}
+                  {errors.propertyState && (
+                    <p className="text-sm text-destructive">
+                      {errors.propertyState}
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="zip" className="text-sm sm:text-base">
@@ -347,8 +398,9 @@ export function PropertyDetails({
                     type="text"
                     value={propertyZip}
                     onChange={(e) => {
-                      handleNumericInput(e.target.value, onPropertyZipChange)
-                      if (errors.propertyZip) setErrors({ ...errors, propertyZip: "" })
+                      handleNumericInput(e.target.value, onPropertyZipChange);
+                      if (errors.propertyZip)
+                        setErrors({ ...errors, propertyZip: "" });
                     }}
                     placeholder="94102"
                     className="h-11 sm:h-10"
@@ -357,7 +409,11 @@ export function PropertyDetails({
                     required
                     aria-invalid={!!errors.propertyZip}
                   />
-                  {errors.propertyZip && <p className="text-sm text-destructive">{errors.propertyZip}</p>}
+                  {errors.propertyZip && (
+                    <p className="text-sm text-destructive">
+                      {errors.propertyZip}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
@@ -373,8 +429,12 @@ export function PropertyDetails({
                     type="text"
                     value={propertyPrice}
                     onChange={(e) => {
-                      handleCurrencyInput(e.target.value, onPropertyPriceChange)
-                      if (errors.propertyPrice) setErrors({ ...errors, propertyPrice: "" })
+                      handleCurrencyInput(
+                        e.target.value,
+                        onPropertyPriceChange,
+                      );
+                      if (errors.propertyPrice)
+                        setErrors({ ...errors, propertyPrice: "" });
                     }}
                     placeholder="350000"
                     className="h-11 sm:h-10 pl-7"
@@ -383,14 +443,20 @@ export function PropertyDetails({
                     aria-invalid={!!errors.propertyPrice}
                   />
                 </div>
-                {errors.propertyPrice && <p className="text-sm text-destructive">{errors.propertyPrice}</p>}
+                {errors.propertyPrice && (
+                  <p className="text-sm text-destructive">
+                    {errors.propertyPrice}
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
           {showCreditScore && (
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold">Credit Information</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Credit Information
+              </h3>
               <div className="space-y-2">
                 <Label htmlFor="creditScore" className="text-sm sm:text-base">
                   {"What's your credit score?"}
@@ -398,8 +464,9 @@ export function PropertyDetails({
                 <Select
                   value={creditScore}
                   onValueChange={(value) => {
-                    onCreditScoreChange(value)
-                    if (errors.creditScore) setErrors({ ...errors, creditScore: "" })
+                    onCreditScoreChange(value);
+                    if (errors.creditScore)
+                      setErrors({ ...errors, creditScore: "" });
                   }}
                   required
                 >
@@ -417,11 +484,16 @@ export function PropertyDetails({
                     <SelectItem value="600-649">600-649</SelectItem>
                     <SelectItem value="<600">&lt;600</SelectItem>
                     <SelectItem value="Unsure">
-                      Not Sure (we'll assume you're around or slightly above the average credit score).
+                      Not Sure (we'll assume you're around or slightly above the
+                      average credit score).
                     </SelectItem>
                   </SelectContent>
                 </Select>
-                {errors.creditScore && <p className="text-sm text-destructive">{errors.creditScore}</p>}
+                {errors.creditScore && (
+                  <p className="text-sm text-destructive">
+                    {errors.creditScore}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -430,7 +502,10 @@ export function PropertyDetails({
             <h3 className="text-base sm:text-lg font-semibold">Loan Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="originalLoanAmount" className="text-sm sm:text-base">
+                <Label
+                  htmlFor="originalLoanAmount"
+                  className="text-sm sm:text-base"
+                >
                   Original Loan Amount
                 </Label>
                 <div className="relative">
@@ -442,8 +517,12 @@ export function PropertyDetails({
                     type="text"
                     value={originalLoanAmount}
                     onChange={(e) => {
-                      handleCurrencyInput(e.target.value, onOriginalLoanAmountChange)
-                      if (errors.originalLoanAmount) setErrors({ ...errors, originalLoanAmount: "" })
+                      handleCurrencyInput(
+                        e.target.value,
+                        onOriginalLoanAmountChange,
+                      );
+                      if (errors.originalLoanAmount)
+                        setErrors({ ...errors, originalLoanAmount: "" });
                     }}
                     placeholder="300000"
                     className="h-11 sm:h-10 pl-7"
@@ -452,7 +531,11 @@ export function PropertyDetails({
                     aria-invalid={!!errors.originalLoanAmount}
                   />
                 </div>
-                {errors.originalLoanAmount && <p className="text-sm text-destructive">{errors.originalLoanAmount}</p>}
+                {errors.originalLoanAmount && (
+                  <p className="text-sm text-destructive">
+                    {errors.originalLoanAmount}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="termType" className="text-sm sm:text-base">
@@ -462,13 +545,14 @@ export function PropertyDetails({
                   <Select
                     value={termType}
                     onValueChange={(value: "30" | "15" | "other" | "") => {
-                      setTermType(value)
+                      setTermType(value);
                       if (value === "30") {
-                        onTermLengthChange("30")
+                        onTermLengthChange("30");
                       } else if (value === "15") {
-                        onTermLengthChange("15")
+                        onTermLengthChange("15");
                       }
-                      if (errors.termLength) setErrors({ ...errors, termLength: "" })
+                      if (errors.termLength)
+                        setErrors({ ...errors, termLength: "" });
                     }}
                     required
                   >
@@ -492,8 +576,12 @@ export function PropertyDetails({
                         type="text"
                         value={termLength}
                         onChange={(e) => {
-                          handleNumericInput(e.target.value, onTermLengthChange)
-                          if (errors.termLength) setErrors({ ...errors, termLength: "" })
+                          handleNumericInput(
+                            e.target.value,
+                            onTermLengthChange,
+                          );
+                          if (errors.termLength)
+                            setErrors({ ...errors, termLength: "" });
                         }}
                         placeholder="20"
                         className="h-11 sm:h-10 pr-16"
@@ -507,10 +595,17 @@ export function PropertyDetails({
                     </div>
                   )}
                 </div>
-                {errors.termLength && <p className="text-sm text-destructive">{errors.termLength}</p>}
+                {errors.termLength && (
+                  <p className="text-sm text-destructive">
+                    {errors.termLength}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="monthlyPayment" className="text-sm sm:text-base">
+                <Label
+                  htmlFor="monthlyPayment"
+                  className="text-sm sm:text-base"
+                >
                   Current Monthly Payment
                 </Label>
                 <div className="relative">
@@ -522,8 +617,12 @@ export function PropertyDetails({
                     type="text"
                     value={monthlyPayment}
                     onChange={(e) => {
-                      handleCurrencyInput(e.target.value, onMonthlyPaymentChange)
-                      if (errors.monthlyPayment) setErrors({ ...errors, monthlyPayment: "" })
+                      handleCurrencyInput(
+                        e.target.value,
+                        onMonthlyPaymentChange,
+                      );
+                      if (errors.monthlyPayment)
+                        setErrors({ ...errors, monthlyPayment: "" });
                     }}
                     placeholder="1750"
                     className="h-11 sm:h-10 pl-7"
@@ -532,7 +631,11 @@ export function PropertyDetails({
                     aria-invalid={!!errors.monthlyPayment}
                   />
                 </div>
-                {errors.monthlyPayment && <p className="text-sm text-destructive">{errors.monthlyPayment}</p>}
+                {errors.monthlyPayment && (
+                  <p className="text-sm text-destructive">
+                    {errors.monthlyPayment}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="startMonth" className="text-sm sm:text-base">
@@ -542,15 +645,19 @@ export function PropertyDetails({
                   month={startMonth}
                   year={startYear}
                   onMonthChange={(value) => {
-                    onStartMonthChange(value)
-                    if (errors.startDate) setErrors({ ...errors, startDate: "" })
+                    onStartMonthChange(value);
+                    if (errors.startDate)
+                      setErrors({ ...errors, startDate: "" });
                   }}
                   onYearChange={(value) => {
-                    onStartYearChange(value)
-                    if (errors.startDate) setErrors({ ...errors, startDate: "" })
+                    onStartYearChange(value);
+                    if (errors.startDate)
+                      setErrors({ ...errors, startDate: "" });
                   }}
                 />
-                {errors.startDate && <p className="text-sm text-destructive">{errors.startDate}</p>}
+                {errors.startDate && (
+                  <p className="text-sm text-destructive">{errors.startDate}</p>
+                )}
               </div>
             </div>
           </div>
@@ -560,8 +667,9 @@ export function PropertyDetails({
               <Alert>
                 <InfoIcon className="h-4 w-4" />
                 <AlertDescription>
-                  Based on your loan information, we've calculated your interest rate and current balance. Please review
-                  these values and adjust them if needed.
+                  Based on your loan information, we've calculated your interest
+                  rate and current balance. Please review these values and
+                  adjust them if needed.
                 </AlertDescription>
               </Alert>
 
@@ -577,8 +685,13 @@ export function PropertyDetails({
                         type="text"
                         value={interestRate}
                         onChange={(e) => {
-                          handleNumericInput(e.target.value, onInterestRateChange, true)
-                          if (errors.interestRate) setErrors({ ...errors, interestRate: "" })
+                          handleNumericInput(
+                            e.target.value,
+                            onInterestRateChange,
+                            true,
+                          );
+                          if (errors.interestRate)
+                            setErrors({ ...errors, interestRate: "" });
                         }}
                         placeholder="6.25"
                         className="h-11 sm:h-10 pr-8"
@@ -590,11 +703,20 @@ export function PropertyDetails({
                         %
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground">Edit if this doesn't look right</p>
-                    {errors.interestRate && <p className="text-sm text-destructive">{errors.interestRate}</p>}
+                    <p className="text-xs text-muted-foreground">
+                      Edit if this doesn't look right
+                    </p>
+                    {errors.interestRate && (
+                      <p className="text-sm text-destructive">
+                        {errors.interestRate}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="currentBalance" className="text-sm sm:text-base">
+                    <Label
+                      htmlFor="currentBalance"
+                      className="text-sm sm:text-base"
+                    >
                       Current Balance
                     </Label>
                     <div className="relative">
@@ -606,8 +728,12 @@ export function PropertyDetails({
                         type="text"
                         value={currentBalance}
                         onChange={(e) => {
-                          handleCurrencyInput(e.target.value, onCurrentBalanceChange)
-                          if (errors.currentBalance) setErrors({ ...errors, currentBalance: "" })
+                          handleCurrencyInput(
+                            e.target.value,
+                            onCurrentBalanceChange,
+                          );
+                          if (errors.currentBalance)
+                            setErrors({ ...errors, currentBalance: "" });
                         }}
                         placeholder="285500"
                         className="h-11 sm:h-10 pl-7"
@@ -616,8 +742,14 @@ export function PropertyDetails({
                         aria-invalid={!!errors.currentBalance}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">Edit if this doesn't look right</p>
-                    {errors.currentBalance && <p className="text-sm text-destructive">{errors.currentBalance}</p>}
+                    <p className="text-xs text-muted-foreground">
+                      Edit if this doesn't look right
+                    </p>
+                    {errors.currentBalance && (
+                      <p className="text-sm text-destructive">
+                        {errors.currentBalance}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -629,13 +761,13 @@ export function PropertyDetails({
               type="button"
               variant="outline"
               onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
+                e.preventDefault();
+                e.stopPropagation();
                 if (loanStage === 2) {
-                  setLoanStage(1)
-                  setErrors({})
+                  setLoanStage(1);
+                  setErrors({});
                 } else {
-                  onBack()
+                  onBack();
                 }
               }}
               className="flex-1 h-11 sm:h-12 bg-transparent"
@@ -666,5 +798,5 @@ export function PropertyDetails({
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,26 +1,36 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { CheckCircle2 } from "lucide-react"
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from "lucide-react";
 
 interface CongratulationsPopupProps {
-  open: boolean
-  onClose: () => void
-  firstName?: string
+  open: boolean;
+  onClose: () => void;
+  firstName?: string;
 }
 
-export function CongratulationsPopup({ open, onClose, firstName }: CongratulationsPopupProps) {
-  const [showConfetti, setShowConfetti] = useState(false)
+export function CongratulationsPopup({
+  open,
+  onClose,
+  firstName,
+}: CongratulationsPopupProps) {
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
     if (open) {
-      setShowConfetti(true)
-      const timer = setTimeout(() => setShowConfetti(false), 4000)
-      return () => clearTimeout(timer)
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 4000);
+      return () => clearTimeout(timer);
     }
-  }, [open])
+  }, [open]);
 
   return (
     <>
@@ -41,9 +51,14 @@ export function CongratulationsPopup({ open, onClose, firstName }: Congratulatio
               <div
                 className="w-2 h-2 sm:w-3 sm:h-3"
                 style={{
-                  backgroundColor: ["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4"][
-                    Math.floor(Math.random() * 6)
-                  ],
+                  backgroundColor: [
+                    "#3b82f6",
+                    "#8b5cf6",
+                    "#ec4899",
+                    "#f59e0b",
+                    "#10b981",
+                    "#06b6d4",
+                  ][Math.floor(Math.random() * 6)],
                   transform: `rotate(${Math.random() * 360}deg)`,
                 }}
               />
@@ -69,8 +84,9 @@ export function CongratulationsPopup({ open, onClose, firstName }: Congratulatio
               Congratulations{firstName ? `, ${firstName}` : ""}!
             </DialogTitle>
             <DialogDescription className="text-center text-base pt-2">
-              Your alerts are now set and actively monitoring for refinance opportunities. We'll notify you as soon as
-              we find potential savings!
+              Your alerts are now set and actively monitoring for refinance
+              opportunities. We'll notify you as soon as we find potential
+              savings!
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-center pt-4">
@@ -98,5 +114,5 @@ export function CongratulationsPopup({ open, onClose, firstName }: Congratulatio
         }
       `}</style>
     </>
-  )
+  );
 }

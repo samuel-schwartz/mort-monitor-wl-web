@@ -1,8 +1,14 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { MailX } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { MailX } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -14,18 +20,23 @@ export default function NotFound() {
               <MailX className="h-6 w-6 text-muted-foreground" />
             </div>
             <CardTitle>Invitation Not Found</CardTitle>
-            <CardDescription>This invitation link is invalid or has expired</CardDescription>
+            <CardDescription>
+              This invitation link is invalid or has expired
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
               Please contact your broker to request a new invitation link.
             </p>
-            <Button onClick={() => (window.location.href = "/")} className="w-full">
+            <Button
+              onClick={() => (window.location.href = "/")}
+              className="w-full"
+            >
               Go to Homepage
             </Button>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

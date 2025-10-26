@@ -1,27 +1,27 @@
-import type React from "react"
-import { DashboardNav } from "./_components/dashboard-nav"
-import { getCurrentUser } from "@/app/_actions/auth"
-import { getUserProperties } from "@/app/_actions/properties"
-import { getBroker } from "@/app/_actions/brokers"
+import type React from "react";
+import { DashboardNav } from "./_components/dashboard-nav";
+import { getCurrentUser } from "@/app/_actions/auth";
+import { getUserProperties } from "@/app/_actions/properties";
+import { getBroker } from "@/app/_actions/brokers";
 
 export default async function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const userResult = await getCurrentUser()
-  const user = userResult.success ? userResult.user : null
+  const userResult = await getCurrentUser();
+  const user = userResult.success ? userResult.user : null;
 
-  let properties = []
-  let broker = null
+  let properties = [];
+  let broker = null;
 
   if (user) {
-    const propertiesResult = await getUserProperties(user.id)
-    properties = propertiesResult.success ? propertiesResult.data || [] : []
+    const propertiesResult = await getUserProperties(user.id);
+    properties = propertiesResult.success ? propertiesResult.data || [] : [];
 
     if (user.brokerId) {
-      const brokerResult = await getBroker(user.brokerId)
-      broker = brokerResult.success ? brokerResult.data : null
+      const brokerResult = await getBroker(user.brokerId);
+      broker = brokerResult.success ? brokerResult.data : null;
     }
   }
 
@@ -32,5 +32,5 @@ export default async function DashboardLayout({
         <div className="p-6">{children}</div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -11,21 +11,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus } from "lucide-react"
-import { createClient } from "@/app/_actions/clients"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus } from "lucide-react";
+import { createClient } from "@/app/_actions/clients";
 
 export function AddClientDialog() {
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [sendInvite, setSendInvite] = useState(true)
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [sendInvite, setSendInvite] = useState(true);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -33,39 +39,39 @@ export function AddClientDialog() {
     email: "",
     phone: "",
     creditScore: "",
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
 
     try {
       const result = await createClient({
         brokerId: "broker_123",
         ...formData,
         sendInvite,
-      })
+      });
 
       if (result.success) {
-        setOpen(false)
+        setOpen(false);
         setFormData({
           firstName: "",
           lastName: "",
           email: "",
           phone: "",
           creditScore: "",
-        })
-        router.refresh()
+        });
+        router.refresh();
       } else {
-        setError(result.error || "Failed to create client")
+        setError(result.error || "Failed to create client");
       }
     } catch (err) {
-      setError("An unexpected error occurred")
+      setError("An unexpected error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -78,7 +84,9 @@ export function AddClientDialog() {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Add New Client</DialogTitle>
-          <DialogDescription>Enter client information to add them to your portfolio.</DialogDescription>
+          <DialogDescription>
+            Enter client information to add them to your portfolio.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -93,7 +101,9 @@ export function AddClientDialog() {
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 required
                 disabled={isLoading}
               />
@@ -104,7 +114,9 @@ export function AddClientDialog() {
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 required
                 disabled={isLoading}
               />
@@ -117,7 +129,9 @@ export function AddClientDialog() {
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               required
               disabled={isLoading}
             />
@@ -129,7 +143,9 @@ export function AddClientDialog() {
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
               disabled={isLoading}
             />
           </div>
@@ -138,7 +154,9 @@ export function AddClientDialog() {
             <Label htmlFor="creditScore">Credit Score Range (Optional)</Label>
             <Select
               value={formData.creditScore}
-              onValueChange={(value) => setFormData({ ...formData, creditScore: value })}
+              onValueChange={(value) =>
+                setFormData({ ...formData, creditScore: value })
+              }
             >
               <SelectTrigger id="creditScore" disabled={isLoading}>
                 <SelectValue placeholder="Select credit score range" />
@@ -160,7 +178,10 @@ export function AddClientDialog() {
               checked={sendInvite}
               onCheckedChange={(checked) => setSendInvite(checked === true)}
             />
-            <Label htmlFor="sendInvite" className="text-sm font-normal cursor-pointer">
+            <Label
+              htmlFor="sendInvite"
+              className="text-sm font-normal cursor-pointer"
+            >
               Send invitation email to client
             </Label>
           </div>
@@ -169,12 +190,17 @@ export function AddClientDialog() {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "Adding..." : "Add Client"}
             </Button>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={isLoading}
+            >
               Cancel
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -1,11 +1,18 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,126 +22,140 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { ArrowUpDown, Mail, Trash2 } from "lucide-react"
-import { deleteClient, reinviteClient } from "@/app/_actions/clients"
-import { useRouter } from "next/navigation"
-import { ClientSummary } from "@/types/models"
+} from "@/components/ui/alert-dialog";
+import { ArrowUpDown, Mail, Trash2 } from "lucide-react";
+import { deleteClient, reinviteClient } from "@/app/_actions/clients";
+import { useRouter } from "next/navigation";
+import { ClientSummary } from "@/types/models";
 
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 
-
-type SortField = "fname" | "lname" | "email" | "alerts" | "soundingAlerts" | "status" | "dateInvited"
-type SortDirection = "asc" | "desc"
+type SortField =
+  | "fname"
+  | "lname"
+  | "email"
+  | "alerts"
+  | "soundingAlerts"
+  | "status"
+  | "dateInvited";
+type SortDirection = "asc" | "desc";
 
 export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
-
-  const { toast } = useToast()
-  const router = useRouter()
-  const [sortField, setSortField] = useState<SortField>("lname")
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [clientToDelete, setClientToDelete] = useState<{ id: string; name: string } | null>(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const { toast } = useToast();
+  const router = useRouter();
+  const [sortField, setSortField] = useState<SortField>("lname");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      setSortField(field)
-      setSortDirection("asc")
+      setSortField(field);
+      setSortDirection("asc");
     }
-  }
+  };
 
   const sortedClients = [...clients].sort((a, b) => {
-    let aValue: string | number | boolean
-    let bValue: string | number | boolean
+    let aValue: string | number | boolean;
+    let bValue: string | number | boolean;
 
     switch (sortField) {
       case "fname":
-        aValue = `${a.firstName}`.toLowerCase()
-        bValue = `${b.firstName}`.toLowerCase()
-        break
+        aValue = `${a.firstName}`.toLowerCase();
+        bValue = `${b.firstName}`.toLowerCase();
+        break;
       case "lname":
-        aValue = `${a.lastName}`.toLowerCase()
-        bValue = `${b.lastName}`.toLowerCase()
-        break
+        aValue = `${a.lastName}`.toLowerCase();
+        bValue = `${b.lastName}`.toLowerCase();
+        break;
       case "email":
-        aValue = a.email.toLowerCase()
-        bValue = b.email.toLowerCase()
-        break
+        aValue = a.email.toLowerCase();
+        bValue = b.email.toLowerCase();
+        break;
       case "alerts":
-        aValue = a.activeAlertCount
-        bValue = b.activeAlertCount
-        break
+        aValue = a.activeAlertCount;
+        bValue = b.activeAlertCount;
+        break;
       case "soundingAlerts":
-        aValue = a.soundingAlertCount
-        bValue = b.soundingAlertCount
-        break
+        aValue = a.soundingAlertCount;
+        bValue = b.soundingAlertCount;
+        break;
       case "status":
-        aValue = a.onboardingStatus
-        bValue = b.onboardingStatus
-        break
+        aValue = a.onboardingStatus;
+        bValue = b.onboardingStatus;
+        break;
       case "dateInvited":
-        aValue = new Date(a.invitedAt).getTime()
-        bValue = new Date(b.invitedAt).getTime()
-        break
+        aValue = new Date(a.invitedAt).getTime();
+        bValue = new Date(b.invitedAt).getTime();
+        break;
       default:
-        return 0
+        return 0;
     }
 
-    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1
-    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1
-    return 0
-  })
+    if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+    return 0;
+  });
 
   const handleDeleteClick = (clientId: string, clientName: string) => {
-    setClientToDelete({ id: clientId, name: clientName })
-    setDeleteDialogOpen(true)
-  }
+    setClientToDelete({ id: clientId, name: clientName });
+    setDeleteDialogOpen(true);
+  };
 
   const handleDeleteConfirm = async () => {
-    if (!clientToDelete) return
+    if (!clientToDelete) return;
 
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
-      const result = await deleteClient(clientToDelete.id)
+      const result = await deleteClient(clientToDelete.id);
       if (result.success) {
-        toast({description:"Client deleted successfully"})
-        router.refresh()
-        setDeleteDialogOpen(false)
+        toast({ description: "Client deleted successfully" });
+        router.refresh();
+        setDeleteDialogOpen(false);
       } else {
-        toast({description:result.error || "Failed to delete client"})
+        toast({ description: result.error || "Failed to delete client" });
       }
     } catch (error) {
-      toast({description:"An unexpected error occurred"})
+      toast({ description: "An unexpected error occurred" });
     } finally {
-      setIsDeleting(false)
-      setClientToDelete(null)
+      setIsDeleting(false);
+      setClientToDelete(null);
     }
-  }
+  };
 
   const handleReinvite = async (clientId: string) => {
-    console.log("HandleReinvite")
-    toast({description:"Starting Reinvite"})
-    if (!clientId) return
+    console.log("HandleReinvite");
+    toast({ description: "Starting Reinvite" });
+    if (!clientId) return;
 
     try {
-      const result = await reinviteClient(clientId)
+      const result = await reinviteClient(clientId);
       if (result.success) {
-        toast({description:"Client reinvited successfully"})
+        toast({ description: "Client reinvited successfully" });
       } else {
-        toast({description:result.error || "Failed to reinvite client"})
+        toast({ description: result.error || "Failed to reinvite client" });
       }
     } catch (error) {
-      toast({description:"An unexpected error occurred"})
+      toast({ description: "An unexpected error occurred" });
     } finally {
-      setIsDeleting(false)
-      setClientToDelete(null)
+      setIsDeleting(false);
+      setClientToDelete(null);
     }
-  }
+  };
 
-  const SortButton = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
+  const SortButton = ({
+    field,
+    children,
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+  }) => (
     <Button
       variant="ghost"
       size="sm"
@@ -144,12 +165,16 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
       {children}
       <ArrowUpDown className="ml-2 h-4 w-4" />
     </Button>
-  )
+  );
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-  }
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
   return (
     <>
       <div className="w-full rounded-md border">
@@ -197,11 +222,16 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
                     <TableCell className="font-medium max-w-[150px] truncate sm:max-w-none">
                       {client.lastName}
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">{client.email}</TableCell>
-                    <TableCell className="text-center hidden sm:table-cell">{client.activeAlertCount}</TableCell>
-                    <TableCell className="text-center hidden lg:table-cell">{client.soundingAlertCount}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {client.email}
+                    </TableCell>
+                    <TableCell className="text-center hidden sm:table-cell">
+                      {client.activeAlertCount}
+                    </TableCell>
+                    <TableCell className="text-center hidden lg:table-cell">
+                      {client.soundingAlertCount}
+                    </TableCell>
                     <TableCell className="hidden xl:table-cell text-center">
-                      
                       {client.onboardingStatus == "invited" ? (
                         <Button
                           size="sm"
@@ -211,23 +241,40 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
                           <Mail className="h-4 w-4" />
                           <span className="">Reinvite</span>
                         </Button>
-                      ):(
+                      ) : (
                         <>
-                        {client.onboardingStatus.charAt(0).toUpperCase() + client.onboardingStatus.slice(1)}
+                          {client.onboardingStatus.charAt(0).toUpperCase() +
+                            client.onboardingStatus.slice(1)}
                         </>
                       )}
                     </TableCell>
-                    <TableCell className="hidden lg:table-cell">{formatDate(client.invitedAt)}</TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      {formatDate(client.invitedAt)}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end gap-1 sm:gap-2">
-                        <Button variant="link" size="sm" asChild className="h-auto p-0 text-xs sm:text-sm">
-                          <Link href={`/dash?viewAsClient=${client.id}`}>View/Edit</Link>
+                        <Button
+                          variant="link"
+                          size="sm"
+                          asChild
+                          className="h-auto p-0 text-xs sm:text-sm"
+                        >
+                          <Link href={`/dash?viewAsClient=${client.id}`}>
+                            View/Edit
+                          </Link>
                         </Button>
-                        <span className="hidden sm:inline text-muted-foreground">|</span>
+                        <span className="hidden sm:inline text-muted-foreground">
+                          |
+                        </span>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDeleteClick(client.id, `${client.firstName} ${client.lastName}`)}
+                          onClick={() =>
+                            handleDeleteClick(
+                              client.id,
+                              `${client.firstName} ${client.lastName}`,
+                            )
+                          }
                           className="h-8 w-8 p-0 text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -236,7 +283,7 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
                       </div>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })
             )}
           </TableBody>
@@ -248,8 +295,9 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Client</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {clientToDelete?.name}? This action cannot be undone and will remove all
-              associated properties and alerts.
+              Are you sure you want to delete {clientToDelete?.name}? This
+              action cannot be undone and will remove all associated properties
+              and alerts.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -265,5 +313,5 @@ export function ClientsTable({ clients }: { clients: ClientSummary[] }) {
         </AlertDialogContent>
       </AlertDialog>
     </>
-  )
+  );
 }

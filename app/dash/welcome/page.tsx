@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { CheckCircle2 } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from "lucide-react";
 
 export default function WelcomePage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [showConfetti, setShowConfetti] = useState(true)
-  const firstName = searchParams.get("firstName") || ""
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [showConfetti, setShowConfetti] = useState(true);
+  const firstName = searchParams.get("firstName") || "";
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 4000)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setShowConfetti(false), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleContinue = () => {
-    router.push("/dash/")
-  }
+    router.push("/dash/");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
@@ -39,9 +39,14 @@ export default function WelcomePage() {
               <div
                 className="w-2 h-2 sm:w-3 sm:h-3"
                 style={{
-                  backgroundColor: ["#3b82f6", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4"][
-                    Math.floor(Math.random() * 6)
-                  ],
+                  backgroundColor: [
+                    "#3b82f6",
+                    "#8b5cf6",
+                    "#ec4899",
+                    "#f59e0b",
+                    "#10b981",
+                    "#06b6d4",
+                  ][Math.floor(Math.random() * 6)],
                   transform: `rotate(${Math.random() * 360}deg)`,
                 }}
               />
@@ -58,11 +63,13 @@ export default function WelcomePage() {
           </div>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4">Congratulations{firstName ? `, ${firstName}` : ""}!</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+          Congratulations{firstName ? `, ${firstName}` : ""}!
+        </h1>
 
         <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-          Your alerts are now set and actively monitoring for refinance opportunities. We'll notify you as soon as we
-          find potential savings!
+          Your alerts are now set and actively monitoring for refinance
+          opportunities. We'll notify you as soon as we find potential savings!
         </p>
 
         <Button onClick={handleContinue} size="lg" className="w-full">
@@ -87,5 +94,5 @@ export default function WelcomePage() {
         }
       `}</style>
     </div>
-  )
+  );
 }

@@ -1,20 +1,29 @@
-import { getUserProperties } from "@/app/_actions/properties"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { Home, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { AlertsCard } from "./loan/[id]/_components/alerts-card"
-import { ClostingCostsCard } from "./loan/[id]/_components/closing-costs-card"
-import { LoanInfoCard } from "./loan/[id]/_components/loan-info-card"
-import { RateChangeCard } from "./loan/[id]/_components/rate-change-card"
+import { getUserProperties } from "@/app/_actions/properties";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Home, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { AlertsCard } from "./loan/[id]/_components/alerts-card";
+import { ClostingCostsCard } from "./loan/[id]/_components/closing-costs-card";
+import { LoanInfoCard } from "./loan/[id]/_components/loan-info-card";
+import { RateChangeCard } from "./loan/[id]/_components/rate-change-card";
 
 export default async function DashboardPage() {
-  const userId = "123"
-  const propertiesResult = await getUserProperties(userId)
-  const properties = propertiesResult.success ? propertiesResult.data || [] : []
+  const userId = "123";
+  const propertiesResult = await getUserProperties(userId);
+  const properties = propertiesResult.success
+    ? propertiesResult.data || []
+    : [];
 
   if (properties.length > 0) {
-    const firstProperty = properties[0]
+    const firstProperty = properties[0];
 
     // Mock data for the dashboard
     const loanData = {
@@ -24,7 +33,7 @@ export default async function DashboardPage() {
       monthlyPayment: 2847,
       remainingBalance: 378500,
       propertyAddress: firstProperty.address,
-    }
+    };
 
     const alertsData = [
       {
@@ -45,16 +54,19 @@ export default async function DashboardPage() {
         priority: "medium" as const,
         time: "1 day ago",
       },
-    ]
+    ];
 
     return (
       <div className="p-4 sm:p-6 lg:p-10 lg:pl-72">
         <div className="space-y-6">
           {/* Header */}
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Loan Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Loan Dashboard
+            </h1>
             <p className="text-gray-600 dark:text-gray-300">
-              Comprehensive overview of your loan, market opportunities, and alerts
+              Comprehensive overview of your loan, market opportunities, and
+              alerts
             </p>
           </div>
 
@@ -78,7 +90,7 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -90,7 +102,8 @@ export default async function DashboardPage() {
           </EmptyMedia>
           <EmptyTitle>No properties yet</EmptyTitle>
           <EmptyDescription>
-            Get started by adding your first property to begin monitoring refinance opportunities.
+            Get started by adding your first property to begin monitoring
+            refinance opportunities.
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
@@ -103,5 +116,5 @@ export default async function DashboardPage() {
         </EmptyContent>
       </Empty>
     </div>
-  )
+  );
 }

@@ -1,20 +1,23 @@
-export type { OnboardingState, OnboardingAction } from "@/types/forms"
+export type { OnboardingState, OnboardingAction } from "@/types/forms";
 
 // Keep the reducer and initial state here as they're specific to onboarding
-import type { OnboardingState, OnboardingAction } from "@/types/forms"
+import type { OnboardingState, OnboardingAction } from "@/types/forms";
 
-export function onboardingReducer(state: OnboardingState, action: OnboardingAction): OnboardingState {
+export function onboardingReducer(
+  state: OnboardingState,
+  action: OnboardingAction,
+): OnboardingState {
   switch (action.type) {
     case "SET_STEP":
-      return { ...state, currentStep: action.step }
+      return { ...state, currentStep: action.step };
     case "SET_FIELD":
-      return { ...state, [action.field]: action.value }
+      return { ...state, [action.field]: action.value };
     case "SET_ALERTS":
-      return { ...state, selectedAlerts: action.alerts }
+      return { ...state, selectedAlerts: action.alerts };
     case "RESET":
-      return initialOnboardingState
+      return initialOnboardingState;
     default:
-      return state
+      return state;
   }
 }
 
@@ -42,4 +45,4 @@ export const initialOnboardingState: OnboardingState = {
   cardExpiry: "",
   cardCvc: "",
   cardName: "",
-}
+};

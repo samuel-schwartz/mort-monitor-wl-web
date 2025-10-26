@@ -1,24 +1,42 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { TrendingDown, FileText, Settings, UserCog, Menu, LogOut, ArrowLeft, Home } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
-import SidebarAccount from "@/components/shared/sidebar-account"
-import { getBrokerFromContext } from "@/app/_providers/broker-provider"
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  TrendingDown,
+  FileText,
+  Settings,
+  UserCog,
+  Menu,
+  LogOut,
+  ArrowLeft,
+  Home,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import SidebarAccount from "@/components/shared/sidebar-account";
+import { getBrokerFromContext } from "@/app/_providers/broker-provider";
 
 function NavContent({
   isSpyView,
   onLinkClick,
-}: { isSpyView?: boolean, onLinkClick?: () => void }) {
+}: {
+  isSpyView?: boolean;
+  onLinkClick?: () => void;
+}) {
+  const pathname = usePathname();
 
-  const pathname = usePathname()
-
-  const isActive = (path: string) => pathname === path || pathname.startsWith(path + "/")
-  const broker = getBrokerFromContext()
-  const viewAsBrokerParam = isSpyView && broker ? "viewAsBroker=" + broker.id : ""
+  const isActive = (path: string) =>
+    pathname === path || pathname.startsWith(path + "/");
+  const broker = getBrokerFromContext();
+  const viewAsBrokerParam =
+    isSpyView && broker ? "viewAsBroker=" + broker.id : "";
 
   return (
     <>
@@ -32,24 +50,32 @@ function NavContent({
       <nav className="flex-1 px-4 py-6 space-y-2">
         <Link href={`/broker${viewAsBrokerParam}`} onClick={onLinkClick}>
           <Button
-            variant={isActive("/broker") && pathname === "/broker" ? "secondary" : "ghost"}
+            variant={
+              isActive("/broker") && pathname === "/broker"
+                ? "secondary"
+                : "ghost"
+            }
             className="w-full justify-start"
           >
             <Home className="mr-3 h-5 w-5" />
             Dashboard
           </Button>
         </Link>
-        <Link href={`/broker/settings${viewAsBrokerParam}`} onClick={onLinkClick}>
-          <Button variant={isActive("/broker/settings") ? "secondary" : "ghost"} className="w-full justify-start">
+        <Link
+          href={`/broker/settings${viewAsBrokerParam}`}
+          onClick={onLinkClick}
+        >
+          <Button
+            variant={isActive("/broker/settings") ? "secondary" : "ghost"}
+            className="w-full justify-start"
+          >
             <Settings className="mr-3 h-5 w-5" />
             Settings
           </Button>
         </Link>
       </nav>
 
-
       <SidebarAccount />
-
 
       {isSpyView && (
         <Link href={"/admin"} onClick={onLinkClick}>
@@ -60,11 +86,11 @@ function NavContent({
         </Link>
       )}
     </>
-  )
+  );
 }
 
 export function BrokerNav({ isSpyView }: { isSpyView: boolean }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -88,10 +114,8 @@ export function BrokerNav({ isSpyView }: { isSpyView: boolean }) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:block fixed inset-y-0 left-0 z-50 w-64 bg-card border-r">
-        <NavContent
-          isSpyView={isSpyView}
-          onLinkClick={() => setOpen(false)} />
+        <NavContent isSpyView={isSpyView} onLinkClick={() => setOpen(false)} />
       </div>
     </>
-  )
+  );
 }

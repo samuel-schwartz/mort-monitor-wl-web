@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 interface BackButtonProps {
-  brandColor?: string
+  brandColor?: string;
 }
 
 export function BackButton({ brandColor }: BackButtonProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const buttonStyle = brandColor
     ? {
@@ -17,7 +17,7 @@ export function BackButton({ brandColor }: BackButtonProps) {
         color: "white",
         borderColor: brandColor,
       }
-    : undefined
+    : undefined;
 
   return (
     <Button
@@ -30,5 +30,5 @@ export function BackButton({ brandColor }: BackButtonProps) {
       <ArrowLeft className="h-4 w-4 mr-2" />
       Go Back
     </Button>
-  )
+  );
 }

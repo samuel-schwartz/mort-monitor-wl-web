@@ -1,73 +1,80 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { updateBroker } from "@/app/_actions/brokers"
-import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff, Check, X } from "lucide-react"
-import type { Broker } from "@/types/models"
-import type { AuthUser } from "@/app/_actions/auth"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { updateBroker } from "@/app/_actions/brokers";
+import { useToast } from "@/hooks/use-toast";
+import { Eye, EyeOff, Check, X } from "lucide-react";
+import type { Broker } from "@/types/models";
+import type { AuthUser } from "@/app/_actions/auth";
 
 interface BrokerProfileProps {
-  broker: Broker | null
-  user: AuthUser | null
+  broker: Broker | null;
+  user: AuthUser | null;
 }
 
 export function BrokerProfile({ broker, user }: BrokerProfileProps) {
-  const { toast } = useToast()
-  const [isEditing, setIsEditing] = useState(false)
-  const [isChangingPassword, setIsChangingPassword] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [newPassword, setNewPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: broker?.firstName || "",
     lastName: broker?.lastName || "",
     phone: broker?.phone || "",
-  })
+  });
 
   // Password validation
-  const hasMinLength = newPassword.length >= 8
-  const hasUppercase = /[A-Z]/.test(newPassword)
-  const hasLowercase = /[a-z]/.test(newPassword)
-  const hasNumber = /[0-9]/.test(newPassword)
-  const isPasswordValid = hasMinLength && hasUppercase && hasLowercase && hasNumber
+  const hasMinLength = newPassword.length >= 8;
+  const hasUppercase = /[A-Z]/.test(newPassword);
+  const hasLowercase = /[a-z]/.test(newPassword);
+  const hasNumber = /[0-9]/.test(newPassword);
+  const isPasswordValid =
+    hasMinLength && hasUppercase && hasLowercase && hasNumber;
 
   const handleSave = async () => {
-    if (!broker) return
+    if (!broker) return;
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
-      const result = await updateBroker(broker.id, formData)
+      const result = await updateBroker(broker.id, formData);
 
       if (result.success) {
         toast({
           title: "Profile Updated",
           description: "Your profile has been updated successfully",
-        })
-        setIsEditing(false)
+        });
+        setIsEditing(false);
       } else {
         toast({
           title: "Error",
           description: result.error || "Failed to update profile",
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handlePasswordChange = async () => {
     if (!newPassword.trim()) {
@@ -75,8 +82,8 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
         title: "Error",
         description: "Please enter a new password",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     if (!isPasswordValid) {
@@ -84,38 +91,38 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
         title: "Error",
         description: "Password must meet all requirements",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       // In a real implementation, this would call a password change API
       toast({
         title: "Password Changed",
         description: "Your password has been updated successfully",
-      })
-      setNewPassword("")
-      setIsChangingPassword(false)
+      });
+      setNewPassword("");
+      setIsChangingPassword(false);
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to change password",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
     setFormData({
       firstName: broker?.firstName || "",
       lastName: broker?.lastName || "",
       phone: broker?.phone || "",
-    })
-    setIsEditing(false)
-  }
+    });
+    setIsEditing(false);
+  };
 
   if (!broker) {
     return (
@@ -125,14 +132,16 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
           <CardDescription>Unable to load profile information</CardDescription>
         </CardHeader>
       </Card>
-    )
+    );
   }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Personal Profile</CardTitle>
-        <CardDescription>Manage your personal information and password</CardDescription>
+        <CardDescription>
+          Manage your personal information and password
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
@@ -142,7 +151,9 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 disabled={!isEditing || isSaving}
                 className={!isEditing ? "bg-muted" : ""}
               />
@@ -153,7 +164,9 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
                 disabled={!isEditing || isSaving}
                 className={!isEditing ? "bg-muted" : ""}
               />
@@ -162,8 +175,15 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
 
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" value={user?.email || ""} disabled className="bg-muted" />
-            <p className="text-xs text-muted-foreground">Email cannot be changed</p>
+            <Input
+              id="email"
+              value={user?.email || ""}
+              disabled
+              className="bg-muted"
+            />
+            <p className="text-xs text-muted-foreground">
+              Email cannot be changed
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -172,7 +192,9 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
               disabled={!isEditing || isSaving}
               className={!isEditing ? "bg-muted" : ""}
               placeholder="(555) 123-4567"
@@ -186,7 +208,11 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
               <Button onClick={handleSave} disabled={isSaving}>
                 {isSaving ? "Saving..." : "Save Changes"}
               </Button>
-              <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isSaving}
+              >
                 Cancel
               </Button>
             </div>
@@ -197,7 +223,10 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
           <h3 className="text-lg font-semibold mb-4">Change Password</h3>
 
           {!isChangingPassword ? (
-            <Button variant="outline" onClick={() => setIsChangingPassword(true)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsChangingPassword(true)}
+            >
               Change Password
             </Button>
           ) : (
@@ -220,7 +249,9 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -230,7 +261,9 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                   </Button>
                 </div>
                 <div className="space-y-2 pt-2">
-                  <p className="text-sm font-medium text-muted-foreground">Password must contain:</p>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Password must contain:
+                  </p>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-sm">
                       {hasMinLength ? (
@@ -238,7 +271,13 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                       ) : (
                         <X className="h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className={hasMinLength ? "text-green-600" : "text-muted-foreground"}>
+                      <span
+                        className={
+                          hasMinLength
+                            ? "text-green-600"
+                            : "text-muted-foreground"
+                        }
+                      >
                         At least 8 characters
                       </span>
                     </div>
@@ -248,7 +287,13 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                       ) : (
                         <X className="h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className={hasUppercase ? "text-green-600" : "text-muted-foreground"}>
+                      <span
+                        className={
+                          hasUppercase
+                            ? "text-green-600"
+                            : "text-muted-foreground"
+                        }
+                      >
                         One uppercase letter
                       </span>
                     </div>
@@ -258,7 +303,13 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                       ) : (
                         <X className="h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className={hasLowercase ? "text-green-600" : "text-muted-foreground"}>
+                      <span
+                        className={
+                          hasLowercase
+                            ? "text-green-600"
+                            : "text-muted-foreground"
+                        }
+                      >
                         One lowercase letter
                       </span>
                     </div>
@@ -268,21 +319,30 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
                       ) : (
                         <X className="h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className={hasNumber ? "text-green-600" : "text-muted-foreground"}>One number</span>
+                      <span
+                        className={
+                          hasNumber ? "text-green-600" : "text-muted-foreground"
+                        }
+                      >
+                        One number
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2">
-                <Button onClick={handlePasswordChange} disabled={!isPasswordValid || isSaving}>
+                <Button
+                  onClick={handlePasswordChange}
+                  disabled={!isPasswordValid || isSaving}
+                >
                   {isSaving ? "Changing..." : "Change Password"}
                 </Button>
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setIsChangingPassword(false)
-                    setNewPassword("")
+                    setIsChangingPassword(false);
+                    setNewPassword("");
                   }}
                   disabled={isSaving}
                 >
@@ -294,5 +354,5 @@ export function BrokerProfile({ broker, user }: BrokerProfileProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

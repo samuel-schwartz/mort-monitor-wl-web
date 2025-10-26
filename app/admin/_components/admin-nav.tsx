@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { TrendingDown, Home, Menu} from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useState } from "react"
-import SidebarAccount from "@/components/shared/sidebar-account"
-import { Broker, User } from "@/types/models"
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { TrendingDown, Home, Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import SidebarAccount from "@/components/shared/sidebar-account";
+import { Broker, User } from "@/types/models";
 
-function NavContent({onLinkClick }: {onLinkClick?: () => void }) {
-  const pathname = usePathname()
-  const isActive = (path: string) => pathname === path || pathname.startsWith(path + "/")
-
+function NavContent({ onLinkClick }: { onLinkClick?: () => void }) {
+  const pathname = usePathname();
+  const isActive = (path: string) =>
+    pathname === path || pathname.startsWith(path + "/");
 
   return (
     <>
@@ -26,7 +31,11 @@ function NavContent({onLinkClick }: {onLinkClick?: () => void }) {
       <nav className="flex-1 px-4 py-6 space-y-2">
         <Link href="/admin" onClick={onLinkClick}>
           <Button
-            variant={isActive("/admin") && pathname === "/admin" ? "secondary" : "ghost"}
+            variant={
+              isActive("/admin") && pathname === "/admin"
+                ? "secondary"
+                : "ghost"
+            }
             className="w-full justify-start"
           >
             <Home className="mr-3 h-5 w-5" />
@@ -37,11 +46,11 @@ function NavContent({onLinkClick }: {onLinkClick?: () => void }) {
 
       <SidebarAccount />
     </>
-  )
+  );
 }
 
 export function AdminNav() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -65,5 +74,5 @@ export function AdminNav() {
         <NavContent />
       </div>
     </>
-  )
+  );
 }

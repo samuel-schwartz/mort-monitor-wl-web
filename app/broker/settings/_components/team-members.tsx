@@ -1,114 +1,121 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { updateBroker } from "@/app/_actions/brokers"
-import { useToast } from "@/hooks/use-toast"
-import { X, Mail, UserPlus } from "lucide-react"
-import type { Broker } from "@/types/models"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { updateBroker } from "@/app/_actions/brokers";
+import { useToast } from "@/hooks/use-toast";
+import { X, Mail, UserPlus } from "lucide-react";
+import type { Broker } from "@/types/models";
 
 interface TeamMembersProps {
-  broker: Broker | null
+  broker: Broker | null;
 }
 
 export function TeamMembers({ broker }: TeamMembersProps) {
-  const { toast } = useToast()
-  const [isAdding, setIsAdding] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const [newEmail, setNewEmail] = useState("")
-  const [emailError, setEmailError] = useState("")
-  const [emails, setEmails] = useState<string[]>(broker?.emails || [])
+  const { toast } = useToast();
+  const [isAdding, setIsAdding] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [emails, setEmails] = useState<string[]>(broker?.emails || []);
 
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleAddEmail = () => {
-    const trimmedEmail = newEmail.trim()
+    const trimmedEmail = newEmail.trim();
 
     if (!trimmedEmail) {
-      setEmailError("Please enter an email address")
-      return
+      setEmailError("Please enter an email address");
+      return;
     }
 
     if (!validateEmail(trimmedEmail)) {
-      setEmailError("Please enter a valid email address")
-      return
+      setEmailError("Please enter a valid email address");
+      return;
     }
 
     if (emails.includes(trimmedEmail)) {
-      setEmailError("This email already has access")
-      return
+      setEmailError("This email already has access");
+      return;
     }
 
-    setEmails([...emails, trimmedEmail])
-    setNewEmail("")
-    setEmailError("")
-  }
+    setEmails([...emails, trimmedEmail]);
+    setNewEmail("");
+    setEmailError("");
+  };
 
   const handleRemoveEmail = (emailToRemove: string) => {
     if (emails.length === 1) {
       toast({
         title: "Cannot Remove",
-        description: "At least one email address must have access to the brokerage",
+        description:
+          "At least one email address must have access to the brokerage",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    setEmails(emails.filter((email) => email !== emailToRemove))
-  }
+    setEmails(emails.filter((email) => email !== emailToRemove));
+  };
 
   const handleSave = async () => {
-    if (!broker) return
+    if (!broker) return;
 
     if (emails.length === 0) {
       toast({
         title: "Error",
         description: "At least one email address is required",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
-      const result = await updateBroker(broker.id, { emails })
+      const result = await updateBroker(broker.id, { emails });
 
       if (result.success) {
         toast({
           title: "Team Updated",
           description: "Team member access has been updated successfully",
-        })
-        setIsAdding(false)
+        });
+        setIsAdding(false);
       } else {
         toast({
           title: "Error",
           description: result.error || "Failed to update team members",
           variant: "destructive",
-        })
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setEmails(broker?.emails || [])
-    setNewEmail("")
-    setEmailError("")
-    setIsAdding(false)
-  }
+    setEmails(broker?.emails || []);
+    setNewEmail("");
+    setEmailError("");
+    setIsAdding(false);
+  };
 
   if (!broker) {
     return (
@@ -118,19 +125,24 @@ export function TeamMembers({ broker }: TeamMembersProps) {
           <CardDescription>Unable to load team information</CardDescription>
         </CardHeader>
       </Card>
-    )
+    );
   }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Team Members</CardTitle>
-        <CardDescription>Manage who has access to your brokerage account</CardDescription>
+        <CardDescription>
+          Manage who has access to your brokerage account
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
           {emails.map((email) => (
-            <div key={email} className="flex items-center justify-between p-3 border rounded-lg">
+            <div
+              key={email}
+              className="flex items-center justify-between p-3 border rounded-lg"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                   <Mail className="h-4 w-4 text-primary" />
@@ -165,21 +177,30 @@ export function TeamMembers({ broker }: TeamMembersProps) {
                     type="email"
                     value={newEmail}
                     onChange={(e) => {
-                      setNewEmail(e.target.value)
-                      setEmailError("")
+                      setNewEmail(e.target.value);
+                      setEmailError("");
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        e.preventDefault()
-                        handleAddEmail()
+                        e.preventDefault();
+                        handleAddEmail();
                       }
                     }}
                     placeholder="email@example.com"
                     disabled={isSaving}
                   />
-                  {emailError && <p className="text-xs text-red-600 dark:text-red-400 mt-1">{emailError}</p>}
+                  {emailError && (
+                    <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                      {emailError}
+                    </p>
+                  )}
                 </div>
-                <Button type="button" onClick={handleAddEmail} disabled={isSaving} variant="secondary">
+                <Button
+                  type="button"
+                  onClick={handleAddEmail}
+                  disabled={isSaving}
+                  variant="secondary"
+                >
                   Add
                 </Button>
               </div>
@@ -191,7 +212,11 @@ export function TeamMembers({ broker }: TeamMembersProps) {
         )}
 
         {!isAdding ? (
-          <Button onClick={() => setIsAdding(true)} variant="outline" className="w-full">
+          <Button
+            onClick={() => setIsAdding(true)}
+            variant="outline"
+            className="w-full"
+          >
             <UserPlus className="mr-2 h-4 w-4" />
             Manage Team Access
           </Button>
@@ -200,12 +225,16 @@ export function TeamMembers({ broker }: TeamMembersProps) {
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>
-            <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              disabled={isSaving}
+            >
               Cancel
             </Button>
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

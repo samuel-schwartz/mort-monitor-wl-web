@@ -1,11 +1,23 @@
-"use client"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MonthYearPicker } from "@/components/shared/month-year-picker"
-import { Pencil } from "lucide-react"
+"use client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MonthYearPicker } from "@/components/shared/month-year-picker";
+import { Pencil } from "lucide-react";
 
 const US_STATES = [
   { value: "AL", label: "Alabama" },
@@ -58,47 +70,47 @@ const US_STATES = [
   { value: "WV", label: "West Virginia" },
   { value: "WI", label: "Wisconsin" },
   { value: "WY", label: "Wyoming" },
-]
+];
 
 interface ClientPropertyReviewProps {
-  firstName: string
-  lastName: string
-  phone: string
-  propertyAddress: string
-  propertyCity: string
-  propertyState: string
-  propertyZip: string
-  propertyPrice: string
-  originalLoanAmount: string
-  currentBalance: string
-  interestRate: string
-  termLength: string
-  startMonth: string
-  startYear: string
-  monthlyPayment: string
-  creditScore: string
-  brokerName: string
-  brokerCompany: string
-  isEditing: boolean
-  onFirstNameChange: (value: string) => void
-  onLastNameChange: (value: string) => void
-  onPhoneChange: (value: string) => void
-  onPropertyAddressChange: (value: string) => void
-  onPropertyCityChange: (value: string) => void
-  onPropertyStateChange: (value: string) => void
-  onPropertyZipChange: (value: string) => void
-  onPropertyPriceChange: (value: string) => void
-  onOriginalLoanAmountChange: (value: string) => void
-  onCurrentBalanceChange: (value: string) => void
-  onInterestRateChange: (value: string) => void
-  onTermLengthChange: (value: string) => void
-  onStartMonthChange: (value: string) => void
-  onStartYearChange: (value: string) => void
-  onMonthlyPaymentChange: (value: string) => void
-  onCreditScoreChange: (value: string) => void
-  onEdit: () => void
-  onSave: () => void
-  onContinue: () => void
+  firstName: string;
+  lastName: string;
+  phone: string;
+  propertyAddress: string;
+  propertyCity: string;
+  propertyState: string;
+  propertyZip: string;
+  propertyPrice: string;
+  originalLoanAmount: string;
+  currentBalance: string;
+  interestRate: string;
+  termLength: string;
+  startMonth: string;
+  startYear: string;
+  monthlyPayment: string;
+  creditScore: string;
+  brokerName: string;
+  brokerCompany: string;
+  isEditing: boolean;
+  onFirstNameChange: (value: string) => void;
+  onLastNameChange: (value: string) => void;
+  onPhoneChange: (value: string) => void;
+  onPropertyAddressChange: (value: string) => void;
+  onPropertyCityChange: (value: string) => void;
+  onPropertyStateChange: (value: string) => void;
+  onPropertyZipChange: (value: string) => void;
+  onPropertyPriceChange: (value: string) => void;
+  onOriginalLoanAmountChange: (value: string) => void;
+  onCurrentBalanceChange: (value: string) => void;
+  onInterestRateChange: (value: string) => void;
+  onTermLengthChange: (value: string) => void;
+  onStartMonthChange: (value: string) => void;
+  onStartYearChange: (value: string) => void;
+  onMonthlyPaymentChange: (value: string) => void;
+  onCreditScoreChange: (value: string) => void;
+  onEdit: () => void;
+  onSave: () => void;
+  onContinue: () => void;
 }
 
 export function ClientPropertyReview({
@@ -141,33 +153,45 @@ export function ClientPropertyReview({
   onSave,
   onContinue,
 }: ClientPropertyReviewProps) {
-  const handleCurrencyInput = (value: string, onChange: (value: string) => void) => {
-    const numericValue = value.replace(/[^0-9]/g, "")
-    onChange(numericValue)
-  }
+  const handleCurrencyInput = (
+    value: string,
+    onChange: (value: string) => void,
+  ) => {
+    const numericValue = value.replace(/[^0-9]/g, "");
+    onChange(numericValue);
+  };
 
-  const handleNumericInput = (value: string, onChange: (value: string) => void, allowDecimal = false) => {
-    const pattern = allowDecimal ? /[^0-9.]/g : /[^0-9]/g
-    const numericValue = value.replace(pattern, "")
-    if (allowDecimal && numericValue.split(".").length > 2) return
-    onChange(numericValue)
-  }
+  const handleNumericInput = (
+    value: string,
+    onChange: (value: string) => void,
+    allowDecimal = false,
+  ) => {
+    const pattern = allowDecimal ? /[^0-9.]/g : /[^0-9]/g;
+    const numericValue = value.replace(pattern, "");
+    if (allowDecimal && numericValue.split(".").length > 2) return;
+    onChange(numericValue);
+  };
 
   return (
     <>
       <div className="container mx-auto px-4 py-12 pb-32">
         <Card className="w-full max-w-4xl mx-auto">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-xl sm:text-2xl">Review Your Property Information</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl">
+              Review Your Property Information
+            </CardTitle>
             <CardDescription className="text-sm sm:text-base">
-              {brokerName} at {brokerCompany} has already filled out information on your behalf. Please review it below
-              in case something was missed or entered by mistake.
+              {brokerName} at {brokerCompany} has already filled out information
+              on your behalf. Please review it below in case something was
+              missed or entered by mistake.
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-6">
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold">Personal Information</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Personal Information
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName" className="text-sm sm:text-base">
@@ -246,7 +270,11 @@ export function ClientPropertyReview({
                     <Label htmlFor="state" className="text-sm sm:text-base">
                       State
                     </Label>
-                    <Select value={propertyState} onValueChange={onPropertyStateChange} disabled={!isEditing}>
+                    <Select
+                      value={propertyState}
+                      onValueChange={onPropertyStateChange}
+                      disabled={!isEditing}
+                    >
                       <SelectTrigger
                         id="state"
                         className={`h-11 sm:h-10 ${!isEditing ? "bg-muted" : ""}`}
@@ -271,7 +299,9 @@ export function ClientPropertyReview({
                       id="zip"
                       type="text"
                       value={propertyZip}
-                      onChange={(e) => handleNumericInput(e.target.value, onPropertyZipChange)}
+                      onChange={(e) =>
+                        handleNumericInput(e.target.value, onPropertyZipChange)
+                      }
                       disabled={!isEditing}
                       maxLength={5}
                       className={`h-11 sm:h-10 ${!isEditing ? "bg-muted" : ""}`}
@@ -280,7 +310,10 @@ export function ClientPropertyReview({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="propertyPrice" className="text-sm sm:text-base">
+                  <Label
+                    htmlFor="propertyPrice"
+                    className="text-sm sm:text-base"
+                  >
                     Property Price When It Was Purchased
                   </Label>
                   <div className="relative">
@@ -290,8 +323,17 @@ export function ClientPropertyReview({
                     <Input
                       id="propertyPrice"
                       type="text"
-                      value={isEditing ? propertyPrice : Number.parseInt(propertyPrice).toLocaleString()}
-                      onChange={(e) => handleCurrencyInput(e.target.value, onPropertyPriceChange)}
+                      value={
+                        isEditing
+                          ? propertyPrice
+                          : Number.parseInt(propertyPrice).toLocaleString()
+                      }
+                      onChange={(e) =>
+                        handleCurrencyInput(
+                          e.target.value,
+                          onPropertyPriceChange,
+                        )
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 pl-7 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -301,12 +343,18 @@ export function ClientPropertyReview({
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold">Credit Information</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Credit Information
+              </h3>
               <div className="space-y-2">
                 <Label htmlFor="creditScore" className="text-sm sm:text-base">
                   Credit Score
                 </Label>
-                <Select value={creditScore} onValueChange={onCreditScoreChange} disabled={!isEditing}>
+                <Select
+                  value={creditScore}
+                  onValueChange={onCreditScoreChange}
+                  disabled={!isEditing}
+                >
                   <SelectTrigger
                     id="creditScore"
                     className={`h-11 sm:h-10 ${!isEditing ? "bg-muted" : ""}`}
@@ -321,7 +369,8 @@ export function ClientPropertyReview({
                     <SelectItem value="600-649">600-649</SelectItem>
                     <SelectItem value="<600">&lt;600</SelectItem>
                     <SelectItem value="Unsure">
-                      Not Sure (we'll assume you're around or slightly above the average credit score).
+                      Not Sure (we'll assume you're around or slightly above the
+                      average credit score).
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -329,10 +378,15 @@ export function ClientPropertyReview({
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold">Loan Details</h3>
+              <h3 className="text-base sm:text-lg font-semibold">
+                Loan Details
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="originalLoanAmount" className="text-sm sm:text-base">
+                  <Label
+                    htmlFor="originalLoanAmount"
+                    className="text-sm sm:text-base"
+                  >
                     Original Loan Amount
                   </Label>
                   <div className="relative">
@@ -342,8 +396,17 @@ export function ClientPropertyReview({
                     <Input
                       id="originalLoanAmount"
                       type="text"
-                      value={isEditing ? originalLoanAmount : Number.parseInt(originalLoanAmount).toLocaleString()}
-                      onChange={(e) => handleCurrencyInput(e.target.value, onOriginalLoanAmountChange)}
+                      value={
+                        isEditing
+                          ? originalLoanAmount
+                          : Number.parseInt(originalLoanAmount).toLocaleString()
+                      }
+                      onChange={(e) =>
+                        handleCurrencyInput(
+                          e.target.value,
+                          onOriginalLoanAmountChange,
+                        )
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 pl-7 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -359,7 +422,9 @@ export function ClientPropertyReview({
                       id="termLength"
                       type="text"
                       value={isEditing ? termLength : `${termLength} years`}
-                      onChange={(e) => handleNumericInput(e.target.value, onTermLengthChange)}
+                      onChange={(e) =>
+                        handleNumericInput(e.target.value, onTermLengthChange)
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -367,7 +432,10 @@ export function ClientPropertyReview({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="monthlyPayment" className="text-sm sm:text-base">
+                  <Label
+                    htmlFor="monthlyPayment"
+                    className="text-sm sm:text-base"
+                  >
                     Current Monthly Payment
                   </Label>
                   <div className="relative">
@@ -377,8 +445,17 @@ export function ClientPropertyReview({
                     <Input
                       id="monthlyPayment"
                       type="text"
-                      value={isEditing ? monthlyPayment : Number.parseInt(monthlyPayment).toLocaleString()}
-                      onChange={(e) => handleCurrencyInput(e.target.value, onMonthlyPaymentChange)}
+                      value={
+                        isEditing
+                          ? monthlyPayment
+                          : Number.parseInt(monthlyPayment).toLocaleString()
+                      }
+                      onChange={(e) =>
+                        handleCurrencyInput(
+                          e.target.value,
+                          onMonthlyPaymentChange,
+                        )
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 pl-7 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -399,7 +476,10 @@ export function ClientPropertyReview({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="interestRate" className="text-sm sm:text-base">
+                  <Label
+                    htmlFor="interestRate"
+                    className="text-sm sm:text-base"
+                  >
                     Interest Rate (APR)
                   </Label>
                   <div className="relative">
@@ -407,7 +487,13 @@ export function ClientPropertyReview({
                       id="interestRate"
                       type="text"
                       value={interestRate}
-                      onChange={(e) => handleNumericInput(e.target.value, onInterestRateChange, true)}
+                      onChange={(e) =>
+                        handleNumericInput(
+                          e.target.value,
+                          onInterestRateChange,
+                          true,
+                        )
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 pr-8 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -418,7 +504,10 @@ export function ClientPropertyReview({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="currentBalance" className="text-sm sm:text-base">
+                  <Label
+                    htmlFor="currentBalance"
+                    className="text-sm sm:text-base"
+                  >
                     Current Balance
                   </Label>
                   <div className="relative">
@@ -428,8 +517,17 @@ export function ClientPropertyReview({
                     <Input
                       id="currentBalance"
                       type="text"
-                      value={isEditing ? currentBalance : Number.parseInt(currentBalance).toLocaleString()}
-                      onChange={(e) => handleCurrencyInput(e.target.value, onCurrentBalanceChange)}
+                      value={
+                        isEditing
+                          ? currentBalance
+                          : Number.parseInt(currentBalance).toLocaleString()
+                      }
+                      onChange={(e) =>
+                        handleCurrencyInput(
+                          e.target.value,
+                          onCurrentBalanceChange,
+                        )
+                      }
                       disabled={!isEditing}
                       className={`h-11 sm:h-10 pl-7 ${!isEditing ? "bg-muted" : ""}`}
                     />
@@ -450,7 +548,12 @@ export function ClientPropertyReview({
               </Button>
             ) : (
               <>
-                <Button onClick={onEdit} variant="outline" className="flex-1 bg-transparent" size="lg">
+                <Button
+                  onClick={onEdit}
+                  variant="outline"
+                  className="flex-1 bg-transparent"
+                  size="lg"
+                >
                   <Pencil className="h-4 w-4 mr-2" />
                   Edit Details
                 </Button>
@@ -463,5 +566,5 @@ export function ClientPropertyReview({
         </div>
       </div>
     </>
-  )
+  );
 }

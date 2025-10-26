@@ -1,14 +1,14 @@
-import { AlertsCard } from "./_components/alerts-card"
-import { ClostingCostsCard } from "./_components/closing-costs-card"
-import { LoanInfoCard } from "./_components/loan-info-card"
-import { RateChangeCard } from "./_components/rate-change-card"
+import { AlertsCard } from "./_components/alerts-card";
+import { ClostingCostsCard } from "./_components/closing-costs-card";
+import { LoanInfoCard } from "./_components/loan-info-card";
+import { RateChangeCard } from "./_components/rate-change-card";
 
 export default async function LoanDashboardPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = await params
+  const { id } = await params;
 
   // Mock data for the dashboard
   const loanData = {
@@ -18,7 +18,7 @@ export default async function LoanDashboardPage({
     monthlyPayment: 2847,
     remainingBalance: 378500,
     propertyAddress: "123 Main St, Eau Claire, WI 54701",
-  }
+  };
 
   const alertsData = [
     {
@@ -39,16 +39,19 @@ export default async function LoanDashboardPage({
       priority: "medium",
       time: "1 day ago",
     },
-  ]
+  ];
 
   return (
     <div className="p-4 sm:p-6 lg:p-10">
       <div className="space-y-6">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Loan Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Loan Dashboard
+          </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Comprehensive overview of your loan, market opportunities, and alerts
+            Comprehensive overview of your loan, market opportunities, and
+            alerts
           </p>
         </div>
 
@@ -72,5 +75,5 @@ export default async function LoanDashboardPage({
         </div>
       </div>
     </div>
-  )
+  );
 }

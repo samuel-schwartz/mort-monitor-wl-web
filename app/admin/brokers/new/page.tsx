@@ -1,11 +1,17 @@
-import { AddBrokerForm } from "@/app/admin/_components/add-broker-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { Metadata } from "next"
+import { AddBrokerForm } from "@/app/admin/_components/add-broker-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Add New Broker",
   description: "Create a new broker account",
-}
+};
 
 export default function NewBrokerPage() {
   return (
@@ -25,5 +31,5 @@ export default function NewBrokerPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

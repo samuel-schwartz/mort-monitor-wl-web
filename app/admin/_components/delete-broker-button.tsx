@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,37 +13,37 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { deleteBroker } from "@/app/_actions/brokers"
-import { Trash2 } from "lucide-react"
+} from "@/components/ui/alert-dialog";
+import { deleteBroker } from "@/app/_actions/brokers";
+import { Trash2 } from "lucide-react";
 
 interface DeleteBrokerButtonProps {
-  brokerId: string
+  brokerId: string;
 }
 
 export function DeleteBrokerButton({ brokerId }: DeleteBrokerButtonProps) {
-  const router = useRouter()
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [error, setError] = useState("")
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleDelete = async () => {
-    setError("")
-    setIsDeleting(true)
+    setError("");
+    setIsDeleting(true);
 
     try {
-      const result = await deleteBroker(brokerId)
+      const result = await deleteBroker(brokerId);
 
       if (result.success) {
-        router.push("/admin/brokers")
+        router.push("/admin/brokers");
       } else {
-        setError(result.error || "Failed to delete broker")
+        setError(result.error || "Failed to delete broker");
       }
     } catch (err) {
-      setError("An unexpected error occurred")
+      setError("An unexpected error occurred");
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <AlertDialog>
@@ -57,7 +57,8 @@ export function DeleteBrokerButton({ brokerId }: DeleteBrokerButtonProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete this broker account and all associated data. This action cannot be undone.
+            This will permanently delete this broker account and all associated
+            data. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error && (
@@ -77,5 +78,5 @@ export function DeleteBrokerButton({ brokerId }: DeleteBrokerButtonProps) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

@@ -1,14 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle } from "lucide-react"
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { AlertTriangle } from "lucide-react";
 
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
-    console.error("[v0] Invitation error:", error)
-  }, [error])
+    console.error("[v0] Invitation error:", error);
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -19,18 +31,23 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
               <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
             <CardTitle>Invalid Invitation</CardTitle>
-            <CardDescription>This invitation link may have expired or is invalid</CardDescription>
+            <CardDescription>
+              This invitation link may have expired or is invalid
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground text-center">
               Please contact your broker to request a new invitation link.
             </p>
-            <Button onClick={() => (window.location.href = "/")} className="w-full">
+            <Button
+              onClick={() => (window.location.href = "/")}
+              className="w-full"
+            >
               Go to Homepage
             </Button>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

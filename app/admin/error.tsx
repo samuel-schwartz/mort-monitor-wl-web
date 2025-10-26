@@ -1,14 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle } from "lucide-react"
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { AlertTriangle } from "lucide-react";
 
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
-    console.error("[v0] Admin dashboard error:", error)
-  }, [error])
+    console.error("[v0] Admin dashboard error:", error);
+  }, [error]);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -18,22 +30,30 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
             <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
           </div>
           <CardTitle>Something went wrong</CardTitle>
-          <CardDescription>We encountered an error loading the admin dashboard</CardDescription>
+          <CardDescription>
+            We encountered an error loading the admin dashboard
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-muted rounded-lg p-4">
-            <p className="text-sm text-muted-foreground font-mono">{error.message}</p>
+            <p className="text-sm text-muted-foreground font-mono">
+              {error.message}
+            </p>
           </div>
           <div className="flex gap-3">
             <Button onClick={reset} className="flex-1">
               Try Again
             </Button>
-            <Button variant="outline" onClick={() => (window.location.href = "/")} className="flex-1">
+            <Button
+              variant="outline"
+              onClick={() => (window.location.href = "/")}
+              className="flex-1"
+            >
               Go Home
             </Button>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
