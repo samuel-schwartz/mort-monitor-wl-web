@@ -1,16 +1,22 @@
-"use server";
+"use server"
 
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { loginSchema } from "@/lib/validation/schemas";
-import { handleActionError } from "@/lib/utils/error-handler";
-import { SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/constants";
+import { cookies } from "next/headers"
+import { loginSchema } from "@/lib/validation/schemas"
+import { handleActionError } from "@/lib/utils/error-handler"
+import { SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/constants"
 
-import { UserRole, User } from "@/types/models";
+import type { UserRole, UserWithRole } from "@/types/models"
 
-import { UserWithRole } from "@/types/models";
+import { signOut } from "@/auth"
 
-import { signOut } from "@/auth";
+interface SessionData {
+  userId: string
+  email: string
+  firstName: string
+  lastName: string
+  role: string
+  brokerId?: string
+}
 
 /**
  * Authenticate user with email, password, and role
@@ -22,31 +28,32 @@ export async function authenticateUser(
   role: UserRole,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const result = loginSchema.safeParse({ email, password });
+    const result = loginSchema.safeParse({ email, password })
     if (!result.success) {
-      return { success: false, error: "Invalid email or password format" };
+      return { success: false, error: "Invalid email or password format" }
     }
 
-    const mockUser: User = {
-      id: `${role}_123`,
+    const sessionData: SessionData = {
+      userId: `${role}_123`,
       email,
       firstName: role.charAt(0).toUpperCase() + role.slice(1),
       lastName: "User",
-      provider: "credentials",
-    };
+      role,
+      brokerId: role === "client" ? "broker_123" : undefined,
+    }
 
-    const cookieStore = await cookies();
-    cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify(mockUser), {
+    const cookieStore = await cookies()
+    cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify(sessionData), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: SESSION_MAX_AGE,
       path: "/",
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    return handleActionError(error, "authenticateUser");
+    return handleActionError(error, "authenticateUser")
   }
 }
 
@@ -62,8 +69,8 @@ export async function getUser(): Promise<UserWithRole> {
     provider: "credentials",
     role: "client",
     brokerId: "broker123",
-  };
-  return user;
+  }
+  return user
 }
 
 /**
@@ -72,7 +79,7 @@ export async function getUser(): Promise<UserWithRole> {
 
 // Optional: redirect to a specific page after sign out
 export async function signOutUser() {
-  await signOut({ redirectTo: "/login" });
+  await signOut({ redirectTo: "/login" })
 }
 
 /**
@@ -85,9 +92,9 @@ export async function changePassword(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Get current user
-    const userResult = await getCurrentUser();
+    const userResult = await getCurrentUser()
     if (!userResult.success || !userResult.user) {
-      return { success: false, error: "Not authenticated" };
+      return { success: false, error: "Not authenticated" }
     }
 
     // Validate password format
@@ -95,39 +102,73 @@ export async function changePassword(
       return {
         success: false,
         error: "Password must be at least 8 characters",
-      };
+      }
     }
 
     if (!/[A-Z]/.test(newPassword)) {
       return {
         success: false,
         error: "Password must contain at least one uppercase letter",
-      };
+      }
     }
 
     if (!/[a-z]/.test(newPassword)) {
       return {
         success: false,
         error: "Password must contain at least one lowercase letter",
-      };
+      }
     }
 
     if (!/[0-9]/.test(newPassword)) {
       return {
         success: false,
         error: "Password must contain at least one number",
-      };
+      }
     }
 
     // In a real app, verify current password against database
     // For MVP, we'll simulate success
-    console.log(
-      "[v0] Password change requested for user:",
-      userResult.user.email,
-    );
+    console.log("[v0] Password change requested for user:", userResult.user.email)
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    return handleActionError(error, "changePassword");
+    return handleActionError(error, "changePassword")
+  }
+}
+
+// Helper function to get current user from session
+export async function getCurrentUser(): Promise<{ success: boolean; user?: UserWithRole }> {
+  const cookieStore = await cookies()
+  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)
+
+  if (!sessionCookie) {
+    return { success: false }
+  }
+
+  try {
+    const sessionData = JSON.parse(sessionCookie.value) as {
+      userId: string
+      email: string
+      firstName: string
+      lastName: string
+      role: string
+      brokerId?: string
+    }
+
+    return {
+      success: true,
+      user: {
+        id: sessionData.userId,
+        email: sessionData.email,
+        firstName: sessionData.firstName,
+        lastName: sessionData.lastName,
+        provider: "credentials",
+        role: sessionData.role as UserRole,
+        brokerId: sessionData.brokerId,
+      },
+    }
+  } catch (error) {
+    console.error("[v0] Error parsing session:", error)
+    return { success: false }
   }
 }

@@ -53,6 +53,12 @@ export type LoanTerm = (typeof LOAN_TERMS)[number]
 export const PRIMARY_TERMS = [30, 15] as const
 export const EXTRA_TERMS = [20, 10, 7, 5] as const
 
+export type AlertConfig = {
+  templateId: TemplateKind
+  inputs: TemplateInputs
+  loanTerms: number[]
+}
+
 export function defaultTemplates(): AlertTemplate[] {
   return [
     {

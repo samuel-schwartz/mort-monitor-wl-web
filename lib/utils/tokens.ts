@@ -5,17 +5,18 @@
 
 import { TOKEN_EXPIRATION } from "@/lib/constants"
 
-export type TokenType = "invitation" | "password_reset" | "email_verification"
+export type TokenType = "invite" | "password_reset" | "email_verification"
 
 export type TokenData = {
-  token: string
+  tokenId: string
   type: TokenType
-  userId?: string
   email?: string
+  firstName?: string
+  lastName?: string
   brokerId?: string
   clientId?: string
   expiresAt: string
-  createdAt: string
+  role?: "admin" | "broker" | "client"
 }
 
 /**
@@ -41,14 +42,14 @@ export function generateToken(): string {
  */
 export function createToken(
   type: TokenType,
-  data: Partial<Omit<TokenData, "token" | "type" | "expiresAt" | "createdAt">>,
+  data: Partial<Omit<TokenData, "tokenId" | "type" | "expiresAt" | "createdAt">>,
 ): TokenData {
-  const token = generateToken()
+  const tokenId = generateToken()
   const createdAt = new Date().toISOString()
 
   let expirationTime: number
   switch (type) {
-    case "invitation":
+    case "invite":
       expirationTime = TOKEN_EXPIRATION.INVITATION
       break
     case "password_reset":
@@ -64,7 +65,7 @@ export function createToken(
   const expiresAt = new Date(Date.now() + expirationTime).toISOString()
 
   return {
-    token,
+    tokenId,
     type,
     expiresAt,
     createdAt,

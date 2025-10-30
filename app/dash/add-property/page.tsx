@@ -1,85 +1,79 @@
-"use client";
+"use client"
 
 // TODO: Fix Alert Config Import Issue
 // TODO: Remove Hardcoded Mock Data
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { TrendingDown, ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { PropertyDetails } from "@/app/onboard/_components/property-details";
-import { AlertSelection } from "@/app/onboard/_components/alert-selection";
-import { useToast } from "@/hooks/use-toast";
-import { createProperty } from "@/app/_actions/properties";
-import { createAlert } from "@/app/_actions/alerts";
-import type { AlertConfig } from "@/types/alerts";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { TrendingDown, ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import PropertyForm from "@/components/onboard/property-form"
+import AlertSelection from "@/components/onboard/alert-selection"
+import { useToast } from "@/hooks/use-toast"
+import { createProperty } from "@/app/_actions/properties"
+import { createAlert } from "@/app/_actions/alerts"
+import type { AlertConfig } from "@/types/alerts"
 
 export default function AddPropertyPage() {
-  const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter()
+  const [currentStep, setCurrentStep] = useState(1)
+  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Mock user data - in production, fetch from auth context
-  const firstName = "John";
-  const userId = "user_123";
+  const firstName = "John"
+  const userId = "user_123"
 
   // Step 1 (Property/Loan Details)
-  const [propertyAddress, setPropertyAddress] = useState("");
-  const [propertyCity, setPropertyCity] = useState("");
-  const [propertyState, setPropertyState] = useState("");
-  const [propertyZip, setPropertyZip] = useState("");
-  const [propertyPrice, setPropertyPrice] = useState("");
-  const [originalLoanAmount, setOriginalLoanAmount] = useState("");
-  const [currentBalance, setCurrentBalance] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [termLength, setTermLength] = useState("");
-  const [startMonth, setStartMonth] = useState("");
-  const [startYear, setStartYear] = useState("");
-  const [monthlyPayment, setMonthlyPayment] = useState("");
-  const [creditScore, setCreditScore] = useState("");
+  const [propertyAddress, setPropertyAddress] = useState("")
+  const [propertyCity, setPropertyCity] = useState("")
+  const [propertyState, setPropertyState] = useState("")
+  const [propertyZip, setPropertyZip] = useState("")
+  const [propertyPrice, setPropertyPrice] = useState("")
+  const [originalLoanAmount, setOriginalLoanAmount] = useState("")
+  const [currentBalance, setCurrentBalance] = useState("")
+  const [interestRate, setInterestRate] = useState("")
+  const [termLength, setTermLength] = useState("")
+  const [startMonth, setStartMonth] = useState("")
+  const [startYear, setStartYear] = useState("")
+  const [monthlyPayment, setMonthlyPayment] = useState("")
+  const [creditScore, setCreditScore] = useState("")
 
   // Step 2 (Alerts)
-  const [selectedAlerts, setSelectedAlerts] = useState<AlertConfig[]>([]);
+  const [selectedAlerts, setSelectedAlerts] = useState<AlertConfig[]>([])
 
   const handleFinalSubmit = async () => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
 
     try {
       toast({
         title: "Adding property...",
         description: "Please wait while we set up your new property.",
-      });
+      })
 
-      const fullAddress = `${propertyAddress}, ${propertyCity}, ${propertyState} ${propertyZip}`;
+      const fullAddress = `${propertyAddress}, ${propertyCity}, ${propertyState} ${propertyZip}`
 
       const property = await createProperty({
         userId,
         address: fullAddress,
         propertyPrice: Number.parseFloat(propertyPrice.replace(/[^0-9.]/g, "")),
-        originalLoanAmount: Number.parseFloat(
-          originalLoanAmount.replace(/[^0-9.]/g, "") || "0",
-        ),
-        currentBalance: Number.parseFloat(
-          currentBalance.replace(/[^0-9.]/g, ""),
-        ),
+        originalLoanAmount: Number.parseFloat(originalLoanAmount.replace(/[^0-9.]/g, "") || "0"),
+        currentBalance: Number.parseFloat(currentBalance.replace(/[^0-9.]/g, "")),
         interestRate: Number.parseFloat(interestRate),
         termLength: Number.parseInt(termLength || "30"),
         startMonth: Number.parseInt(startMonth),
         startYear: Number.parseInt(startYear),
-        monthlyPayment: Number.parseFloat(
-          monthlyPayment.replace(/[^0-9.]/g, ""),
-        ),
-      });
+        monthlyPayment: Number.parseFloat(monthlyPayment.replace(/[^0-9.]/g, "")),
+      })
 
       if (!property.success) {
         toast({
           variant: "destructive",
           title: "Failed to add property",
           description: property.error || "Please try again.",
-        });
-        setIsSubmitting(false);
-        return;
+        })
+        setIsSubmitting(false)
+        return
       }
 
       for (const alertConfig of selectedAlerts) {
@@ -87,25 +81,25 @@ export default function AddPropertyPage() {
           userId,
           propertyId: property.propertyId!,
           ...alertConfig,
-        });
+        })
       }
 
       toast({
         title: "Property added successfully",
         description: "Your new property and alerts have been set up.",
-      });
+      })
 
-      router.push("/dash");
+      router.push("/dash")
     } catch (error) {
-      console.error("[v0] Error adding property:", error);
+      console.error("[v0] Error adding property:", error)
       toast({
         variant: "destructive",
         title: "Something went wrong",
         description: "Failed to add property. Please try again.",
-      });
-      setIsSubmitting(false);
+      })
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
@@ -113,31 +107,23 @@ export default function AddPropertyPage() {
       <header className="border-b bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push("/dash")}
-              aria-label="Back to dashboard"
-            >
+            <Button variant="ghost" size="icon" onClick={() => router.push("/dash")} aria-label="Back to dashboard">
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="flex items-center gap-2">
               <TrendingDown className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
-              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
-                Add Loan/Property
-              </h1>
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">Add Loan/Property</h1>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground">
-            Step {currentStep} of 2
-          </div>
+          <div className="text-sm text-muted-foreground">Step {currentStep} of 2</div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 sm:py-12">
         {currentStep === 1 && (
-          <PropertyDetails
+          <PropertyForm
+            mode="create"
             firstName={firstName}
             propertyAddress={propertyAddress}
             propertyCity={propertyCity}
@@ -167,14 +153,19 @@ export default function AddPropertyPage() {
             onCreditScoreChange={setCreditScore}
             onNext={() => setCurrentStep(2)}
             onBack={() => router.push("/dash")}
-            showCreditScore={false}
           />
         )}
 
         {currentStep === 2 && (
           <AlertSelection
+            mode="create"
             firstName={firstName}
             selectedAlerts={selectedAlerts}
+            propertyPrice={propertyPrice} // Added required prop
+            currentBalance={currentBalance} // Added required prop
+            startMonth={startMonth} // Added required prop
+            startYear={startYear} // Added required prop
+            termLength={termLength} // Added required prop
             onAlertsChange={setSelectedAlerts}
             onNext={handleFinalSubmit}
             onBack={() => setCurrentStep(1)}
@@ -182,5 +173,5 @@ export default function AddPropertyPage() {
         )}
       </main>
     </div>
-  );
+  )
 }

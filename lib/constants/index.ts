@@ -19,17 +19,6 @@ export const ALERT_STATUS = {
   SOUNDING: "sounding",
 } as const
 
-export type AlertStatus = (typeof ALERT_STATUS)[keyof typeof ALERT_STATUS]
-
-// Pricing
-export const PRICING = {
-  ALERT_MONTHLY_COST: 1, // $1 per alert per month
-  ALERT_ANNUAL_COST: 12, // $12 per alert per year
-  BROKER_STARTER_MONTHLY: 49,
-  BROKER_PROFESSIONAL_MONTHLY: 99,
-  BROKER_ENTERPRISE_MONTHLY: 199,
-} as const
-
 // Time Constants (in milliseconds)
 export const TIME = {
   SECOND: 1000,

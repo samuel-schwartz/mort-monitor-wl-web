@@ -1,102 +1,80 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import type React from "react"
+import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface ClientInfoStepProps {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  creditScore: string;
-  onFirstNameChange: (value: string) => void;
-  onLastNameChange: (value: string) => void;
-  onEmailChange: (value: string) => void;
-  onPhoneChange: (value: string) => void;
-  onCreditScoreChange: (value: string) => void;
-  onNext: () => void;
-  onCancel: () => void;
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  onFirstNameChange: (value: string) => void
+  onLastNameChange: (value: string) => void
+  onEmailChange: (value: string) => void
+  onPhoneChange: (value: string) => void
+  onNext: () => void
+  onCancel: () => void
 }
 
-export function ClientInfoStep({
+function ClientInfoStep({
   firstName,
   lastName,
   email,
   phone,
-  creditScore,
   onFirstNameChange,
   onLastNameChange,
   onEmailChange,
   onPhoneChange,
-  onCreditScoreChange,
   onNext,
   onCancel,
 }: ClientInfoStepProps) {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const isFormValid =
-    firstName.trim() && lastName.trim() && email.trim() && creditScore;
+  const isFormValid = firstName.trim() && lastName.trim() && email.trim()
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!firstName.trim()) {
-      newErrors.firstName = "First name is required";
+      newErrors.firstName = "First name is required"
     }
     if (!lastName.trim()) {
-      newErrors.lastName = "Last name is required";
+      newErrors.lastName = "Last name is required"
     }
     if (!email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = "Email is required"
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Invalid email address";
-    }
-    if (!creditScore) {
-      newErrors.creditScore = "Credit score is required";
+      newErrors.email = "Invalid email address"
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (validateForm()) {
-      onNext();
+      onNext()
     }
-  };
+  }
 
   const handleContinue = (e: React.MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (validateForm()) {
-      onNext();
+      onNext()
     }
-  };
+  }
 
   return (
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-xl sm:text-2xl">Add New Client</CardTitle>
-        <CardDescription className="text-sm sm:text-base">
-          Enter your client's information
-        </CardDescription>
+        <CardDescription className="text-sm sm:text-base">Enter your client's information</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -109,8 +87,8 @@ export function ClientInfoStep({
                 id="firstName"
                 value={firstName}
                 onChange={(e) => {
-                  onFirstNameChange(e.target.value);
-                  if (errors.firstName) setErrors({ ...errors, firstName: "" });
+                  onFirstNameChange(e.target.value)
+                  if (errors.firstName) setErrors({ ...errors, firstName: "" })
                 }}
                 placeholder="Enter first name"
                 className="h-10"
@@ -118,16 +96,10 @@ export function ClientInfoStep({
                 autoFocus
                 required
                 aria-invalid={!!errors.firstName}
-                aria-describedby={
-                  errors.firstName ? "firstName-error" : undefined
-                }
+                aria-describedby={errors.firstName ? "firstName-error" : undefined}
               />
               {errors.firstName && (
-                <p
-                  id="firstName-error"
-                  className="text-sm text-destructive"
-                  role="alert"
-                >
+                <p id="firstName-error" className="text-sm text-destructive" role="alert">
                   {errors.firstName}
                 </p>
               )}
@@ -140,24 +112,18 @@ export function ClientInfoStep({
                 id="lastName"
                 value={lastName}
                 onChange={(e) => {
-                  onLastNameChange(e.target.value);
-                  if (errors.lastName) setErrors({ ...errors, lastName: "" });
+                  onLastNameChange(e.target.value)
+                  if (errors.lastName) setErrors({ ...errors, lastName: "" })
                 }}
                 placeholder="Enter last name"
                 className="h-10"
                 autoComplete="family-name"
                 required
                 aria-invalid={!!errors.lastName}
-                aria-describedby={
-                  errors.lastName ? "lastName-error" : undefined
-                }
+                aria-describedby={errors.lastName ? "lastName-error" : undefined}
               />
               {errors.lastName && (
-                <p
-                  id="lastName-error"
-                  className="text-sm text-destructive"
-                  role="alert"
-                >
+                <p id="lastName-error" className="text-sm text-destructive" role="alert">
                   {errors.lastName}
                 </p>
               )}
@@ -174,8 +140,8 @@ export function ClientInfoStep({
                 type="email"
                 value={email}
                 onChange={(e) => {
-                  onEmailChange(e.target.value);
-                  if (errors.email) setErrors({ ...errors, email: "" });
+                  onEmailChange(e.target.value)
+                  if (errors.email) setErrors({ ...errors, email: "" })
                 }}
                 placeholder="client@example.com"
                 className="h-10"
@@ -185,11 +151,7 @@ export function ClientInfoStep({
                 aria-describedby={errors.email ? "email-error" : undefined}
               />
               {errors.email && (
-                <p
-                  id="email-error"
-                  className="text-sm text-destructive"
-                  role="alert"
-                >
+                <p id="email-error" className="text-sm text-destructive" role="alert">
                   {errors.email}
                 </p>
               )}
@@ -197,7 +159,7 @@ export function ClientInfoStep({
 
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-sm sm:text-base">
-                Phone Number (Optional)
+                Cell Phone Number
               </Label>
               <Input
                 id="phone"
@@ -210,56 +172,20 @@ export function ClientInfoStep({
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="creditScore" className="text-sm sm:text-base">
-                Credit Score Range
-              </Label>
-              <Select value={creditScore} onValueChange={onCreditScoreChange}>
-                <SelectTrigger
-                  id="creditScore"
-                  className="h-10"
-                  aria-invalid={!!errors.creditScore}
-                >
-                  <SelectValue placeholder="Select credit score range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="excellent">Excellent (740+)</SelectItem>
-                  <SelectItem value="good">Good (670-739)</SelectItem>
-                  <SelectItem value="fair">Fair (580-669)</SelectItem>
-                  <SelectItem value="poor">Poor (Below 580)</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.creditScore && (
-                <p
-                  id="creditScore-error"
-                  className="text-sm text-destructive"
-                  role="alert"
-                >
-                  {errors.creditScore}
-                </p>
-              )}
-            </div>
           </div>
 
           <div className="flex gap-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
-              className="flex-1 h-11 sm:h-12 bg-transparent"
-            >
+            <Button type="button" variant="outline" onClick={onCancel} className="flex-1 h-11 sm:h-12 bg-transparent">
               Cancel
             </Button>
-            <Button
-              onClick={handleContinue}
-              className="flex-1 h-11 sm:h-12"
-              disabled={!isFormValid}
-            >
+            <Button onClick={handleContinue} className="flex-1 h-11 sm:h-12" disabled={!isFormValid}>
               Continue
             </Button>
           </div>
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }
+
+export default ClientInfoStep

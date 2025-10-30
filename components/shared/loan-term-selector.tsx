@@ -7,10 +7,9 @@ import { LOAN_TERMS } from "@/types/alerts"
 interface LoanTermSelectorProps {
   selectedTerms: number[]
   onTermsChange: (terms: number[]) => void
-  showPricing?: boolean
 }
 
-export function LoanTermSelector({ selectedTerms, onTermsChange, showPricing = true }: LoanTermSelectorProps) {
+export function LoanTermSelector({ selectedTerms, onTermsChange }: LoanTermSelectorProps) {
   const toggleTerm = (term: number, checked: boolean) => {
     if (checked) {
       onTermsChange([...selectedTerms, term])

@@ -116,7 +116,8 @@ async function apiCall<T>(
  * Convenience methods for common HTTP verbs
  */
 export const apiClient = {
-  get: <T>(endpoint: string, mockResponse?: () => T) => apiCall<T>(endpoint, { method: "GET" }, mockResponse),
+  get: <T>(endpoint: string, mockResponse?: () => T) => 
+    apiCall<T>(endpoint, { method: "GET" }, mockResponse),
 
   post: <T>(endpoint: string, body: unknown, mockResponse?: () => T) =>
     apiCall<T>(endpoint, { method: "POST", body: JSON.stringify(body) }, mockResponse),
@@ -124,5 +125,6 @@ export const apiClient = {
   patch: <T>(endpoint: string, body: unknown, mockResponse?: () => T) =>
     apiCall<T>(endpoint, { method: "PATCH", body: JSON.stringify(body) }, mockResponse),
 
-  delete: <T>(endpoint: string, mockResponse?: () => T) => apiCall<T>(endpoint, { method: "DELETE" }, mockResponse),
+  delete: <T>(endpoint: string, mockResponse?: () => T) => 
+    apiCall<T>(endpoint, { method: "DELETE" }, mockResponse),
 }

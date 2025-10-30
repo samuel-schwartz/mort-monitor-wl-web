@@ -1,52 +1,59 @@
-"use server";
+"use server"
 
 /**
  * Server actions for alert operations
  * Updated to handle per-alert subscription creation
  */
 
-import { revalidatePath } from "next/cache";
-import { apiClient } from "@/lib/api-client";
-import { getMockPropertyAlerts } from "@/lib/mock-data";
-import type { Alert, CreateAlertInput, UpdateAlertInput } from "@/types/api";
+import { revalidatePath } from "next/cache"
+import { apiClient } from "@/lib/api-client"
+import { getMockPropertyAlerts } from "@/lib/mock-data"
+import type { Alert, CreateAlertInput, UpdateAlertInput } from "@/types/api"
 
 // Re-export types for backwards compatibility
-export type { Alert, CreateAlertInput, UpdateAlertInput };
+export type { Alert, CreateAlertInput, UpdateAlertInput }
 
-export type TemplateKind = string;
+export type TemplateKind = string
 
 /**
  * Create a new alert with subscription
  */
 export async function createAlert(input: CreateAlertInput): Promise<{
-  success: boolean;
-  alertId?: string;
-  subscriptionId?: string;
-  error?: string;
+  success: boolean
+  alertId?: string
+  subscriptionId?: string
+  error?: string
 }> {
   try {
-    const result = await apiClient.post<{ id: string; subscriptionId: string }>(
-      "/alerts",
-      input,
-    );
+    const result = await apiClient.post<{ id: string; subscriptionId: string }>("/alerts", input, () => ({
+      id: `alert_${Date.now()}`,
+      subscriptionId: `sub_${Date.now()}`,
+      userId: input.userId,
+      propertyId: input.propertyId,
+      templateId: input.templateId,
+      inputs: input.inputs,
+      loanTerms: input.loanTerms,
+      isActive: true,
+      createdAt: new Date().toISOString(),
+    }))
 
     if (!result.success) {
       return {
         success: false,
         error: result.error || "Failed to create alert",
-      };
+      }
     }
 
-    revalidatePath(`/dash/loan/${input.propertyId}/alerts`);
-    revalidatePath("/dash/account");
+    revalidatePath(`/dash/loan/${input.propertyId}/alerts`)
+    revalidatePath("/dash/account")
     return {
       success: true,
       alertId: result.data?.id,
       subscriptionId: result.data?.subscriptionId,
-    };
+    }
   } catch (error) {
-    console.error("[v0] Error creating alert:", error);
-    return { success: false, error: "An unexpected error occurred" };
+    console.error("[v0] Error creating alert:", error)
+    return { success: false, error: "An unexpected error occurred" }
   }
 }
 
@@ -57,22 +64,21 @@ export async function getPropertyAlerts(
   propertyId: string,
 ): Promise<{ success: boolean; alerts?: Alert[]; error?: string }> {
   try {
-    const result = await apiClient.get<Alert[]>(
-      `/properties/${propertyId}/alerts`,
-      () => getMockPropertyAlerts(propertyId),
-    );
+    const result = await apiClient.get<Alert[]>(`/properties/${propertyId}/alerts`, () =>
+      getMockPropertyAlerts(propertyId),
+    )
 
     if (!result.success) {
       return {
         success: false,
         error: result.error || "Failed to fetch alerts",
-      };
+      }
     }
 
-    return { success: true, alerts: result.data || [] };
+    return { success: true, alerts: result.data || [] }
   } catch (error) {
-    console.error("[v0] Error fetching alerts:", error);
-    return { success: false, error: "An unexpected error occurred" };
+    console.error("[v0] Error fetching alerts:", error)
+    return { success: false, error: "An unexpected error occurred" }
   }
 }
 
@@ -85,45 +91,42 @@ export async function updateAlert(
   input: UpdateAlertInput,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const result = await apiClient.patch(`/alerts/${alertId}`, input);
+    const result = await apiClient.patch(`/alerts/${alertId}`, input)
 
     if (!result.success) {
       return {
         success: false,
         error: result.error || "Failed to update alert",
-      };
+      }
     }
 
-    revalidatePath(`/dash/loan/${propertyId}/alerts`);
-    return { success: true };
+    revalidatePath(`/dash/loan/${propertyId}/alerts`)
+    return { success: true }
   } catch (error) {
-    console.error("[v0] Error updating alert:", error);
-    return { success: false, error: "An unexpected error occurred" };
+    console.error("[v0] Error updating alert:", error)
+    return { success: false, error: "An unexpected error occurred" }
   }
 }
 
 /**
  * Delete an alert
  */
-export async function deleteAlert(
-  alertId: string,
-  propertyId: string,
-): Promise<{ success: boolean; error?: string }> {
+export async function deleteAlert(alertId: string, propertyId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const result = await apiClient.delete(`/alerts/${alertId}`);
+    const result = await apiClient.delete(`/alerts/${alertId}`)
 
     if (!result.success) {
       return {
         success: false,
         error: result.error || "Failed to delete alert",
-      };
+      }
     }
 
-    revalidatePath(`/dash/loan/${propertyId}/alerts`);
-    return { success: true };
+    revalidatePath(`/dash/loan/${propertyId}/alerts`)
+    return { success: true }
   } catch (error) {
-    console.error("[v0] Error deleting alert:", error);
-    return { success: false, error: "An unexpected error occurred" };
+    console.error("[v0] Error deleting alert:", error)
+    return { success: false, error: "An unexpected error occurred" }
   }
 }
 
@@ -133,5 +136,5 @@ export async function deleteAlert(
 export async function getAlertsByProperty(
   propertyId: string,
 ): Promise<{ success: boolean; alerts?: Alert[]; error?: string }> {
-  return getPropertyAlerts(propertyId);
+  return getPropertyAlerts(propertyId)
 }
