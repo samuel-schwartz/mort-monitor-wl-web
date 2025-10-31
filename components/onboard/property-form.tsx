@@ -155,11 +155,11 @@ export default function PropertyForm({
   }, [startMonth, startYear, onStartMonthChange, onStartYearChange])
 
   useEffect(() => {
-    if (termLength === "30") {
+    if (termLength == "30") {
       setTermType("30")
-    } else if (termLength === "15") {
+    } else if (termLength == "15") {
       setTermType("15")
-    } else if (termLength && termLength !== "30" && termLength !== "15") {
+    } else if (termLength && termLength != "30" && termLength != "15") {
       setTermType("other")
     }
   }, [termLength])
@@ -715,7 +715,7 @@ export default function PropertyForm({
                     !creditScore
               }
             >
-              Continue
+              Save &amp; Continue
             </Button>
           </div>
         </form>

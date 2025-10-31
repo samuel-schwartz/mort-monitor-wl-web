@@ -3,8 +3,8 @@
 import type React from "react";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import { Pencil, X, Save } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { Pencil, X, Save, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,6 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import PropertyForm from "@/components/onboard/property-form";
+import { getUserFromContext } from "@/app/_providers/user-provider";
 
 /** ---------- Helpers ---------- */
 function toNumber(v: any): number {
@@ -114,6 +116,9 @@ async function updateLoan(
 
 /** ---------- Page ---------- */
 export default function LoanDetailsPage() {
+
+    const router = useRouter()
+
   const params = useParams<{ id: string }>();
   const loanId = decodeURIComponent(params.id);
 
@@ -143,6 +148,22 @@ export default function LoanDetailsPage() {
   const [balance, setBalance] = useState<number>(0);
   const [creditScore, setCreditScore] = useState<string>("");
 
+  const clientData = {}
+    const [formData, setFormData] = useState({
+    propertyAddress: clientData.property?.address?.split(",")[0] || "1348 Armstrong Pl",
+    propertyCity: clientData.property?.city || "Eau Claire",
+    propertyState: clientData.property?.state || "WI",
+    propertyZip: clientData.property?.zipCode || "54701",
+    propertyPrice: clientData.property?.purchasePrice?.toString() || "750000",
+    originalLoanAmount: clientData.property?.originalLoanAmount?.toString() || "600000",
+    currentBalance: clientData.property?.currentBalance?.toString() || "550000",
+    interestRate: clientData.property?.interestRate?.toString() || "6.5",
+    termLength: clientData.property?.termLength?.toString() || "30",
+    startMonth: clientData.property?.loanStartMonth?.toString() || "1",
+    startYear: clientData.property?.loanStartYear?.toString() || "2020",
+    monthlyPayment: clientData.property?.monthlyPayment?.toString() || "3795",
+    creditScore: clientData.creditScore || "700-749",
+  })
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -162,30 +183,7 @@ export default function LoanDetailsPage() {
     })();
   }, [loanId]);
 
-  // Derived calcs
-  const minMonthlyPaymentPI = useMemo(
-    () => monthlyPaymentPAndI(loanAmount, rate, termYears),
-    [loanAmount, rate, termYears],
-  );
-  const monthsRemaining = useMemo(() => {
-    const n = remainingMonths(balance, rate, minMonthlyPaymentPI);
-    return Number.isFinite(n) ? n : 0;
-  }, [balance, rate, minMonthlyPaymentPI]);
-  const forecastPayoffDate = useMemo(
-    () => addMonths(new Date(), monthsRemaining),
-    [monthsRemaining],
-  );
-  const futureInterestToPay = useMemo(() => {
-    if (monthsRemaining <= 0 || minMonthlyPaymentPI === 0) return 0;
-    return Math.max(0, minMonthlyPaymentPI * monthsRemaining - balance);
-  }, [minMonthlyPaymentPI, monthsRemaining, balance]);
-  const totalMonthlyPITI = useMemo(
-    () =>
-      minMonthlyPaymentPI +
-      toNumber(loan?.taxesMonthly ?? 0) +
-      toNumber(loan?.insuranceMonthly ?? 0),
-    [minMonthlyPaymentPI, loan],
-  );
+  
 
   function enterEdit() {
     if (typeof window !== "undefined") window.location.hash = "edit";
@@ -226,6 +224,8 @@ export default function LoanDetailsPage() {
     );
   }
 
+
+
   return (
     <main className="p-4 md:p-6 max-w-6xl mx-auto">
       <header className="mb-6 flex items-start justify-between gap-3">
@@ -234,222 +234,47 @@ export default function LoanDetailsPage() {
         </div>
       </header>
 
-      {/* Two-column responsive layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Left: Inputs (read-only spans unless #edit) */}
-        <section className="lg:col-span-3 space-y-5">
-          <Panel title="Property">
-            <div className="grid gap-4">
-              <Field
-                label="Address"
-                edit={editMode}
-                valueNode={<span>{address || "—"}</span>}
-                inputNode={
-                  <input
-                    className="rounded-lg border px-3 py-2 w-full"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Street, City, State ZIP"
-                  />
-                }
-              />
-              <Field
-                label="Property Price"
-                edit={editMode}
-                valueNode={<span>{fmtCurrency(propertyPrice)}</span>}
-                inputNode={
-                  <input
-                    className="rounded-lg border px-3 py-2"
-                    inputMode="decimal"
-                    value={propertyPrice}
-                    onChange={(e) => setPropertyPrice(toNumber(e.target.value))}
-                  />
-                }
-              />
-            </div>
-          </Panel>
 
-          <Panel title="Credit Information">
-            <div className="grid gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="creditScore">Credit Score Range</Label>
-                {editMode ? (
-                  <Select value={creditScore} onValueChange={setCreditScore}>
-                    <SelectTrigger id="creditScore">
-                      <SelectValue placeholder="Select credit score range" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="750+">750+ (Excellent)</SelectItem>
-                      <SelectItem value="700-749">700-749 (Good)</SelectItem>
-                      <SelectItem value="650-699">650-699 (Fair)</SelectItem>
-                      <SelectItem value="600-649">600-649 (Poor)</SelectItem>
-                      <SelectItem value="below-600">
-                        Below 600 (Very Poor)
-                      </SelectItem>
-                      <SelectItem value="Unsure">Not Sure</SelectItem>
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <span className="py-2 block">{creditScore || "—"}</span>
-                )}
-              </div>
-            </div>
-          </Panel>
 
-          <Panel title="Loan (inputs)">
-            <div className="grid md:grid-cols-2 gap-4">
-              <Field
-                label="Original Loan Amount"
-                edit={editMode}
-                valueNode={<span>{fmtCurrency(loanAmount)}</span>}
-                inputNode={
-                  <input
-                    className="rounded-lg border px-3 py-2 w-full"
-                    inputMode="decimal"
-                    value={loanAmount}
-                    onChange={(e) => setLoanAmount(toNumber(e.target.value))}
-                  />
-                }
-              />
-              <Field
-                label="Current Balance"
-                edit={editMode}
-                valueNode={<span>{fmtCurrency(balance)}</span>}
-                inputNode={
-                  <input
-                    className="rounded-lg border px-3 py-2 w-full"
-                    inputMode="decimal"
-                    value={balance}
-                    onChange={(e) => setBalance(toNumber(e.target.value))}
-                  />
-                }
-              />
-              <Field
-                label="Interest Rate (APR)"
-                edit={editMode}
-                valueNode={<span>{fmtPercent(rate)}</span>}
-                inputNode={
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="rounded-lg border px-3 py-2 w-full"
-                      inputMode="decimal"
-                      value={rate}
-                      onChange={(e) => setRate(toNumber(e.target.value))}
-                    />
-                    <span className="text-gray-500">% </span>
-                  </div>
-                }
-              />
-              <Field
-                label="Term Length"
-                edit={editMode}
-                valueNode={<span>{termYears} years</span>}
-                inputNode={
-                  <div className="flex items-center gap-2">
-                    <input
-                      className="rounded-lg border px-3 py-2 w-full"
-                      inputMode="decimal"
-                      value={termYears}
-                      onChange={(e) => setTermYears(toNumber(e.target.value))}
-                    />
-                    <span className="text-gray-500">years</span>
-                  </div>
-                }
-              />
-              <Field
-                label="Start / First Payment Date"
-                edit={editMode}
-                full
-                valueNode={
-                  <span>{new Date(startDate).toLocaleDateString()}</span>
-                }
-                inputNode={
-                  <input
-                    type="date"
-                    className="rounded-lg border px-3 py-2"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                  />
-                }
-              />
-            </div>
-          </Panel>
-        </section>
+      <PropertyForm
+              mode="review"
+              firstName={getUserFromContext()?.firstName || ""}
+              propertyAddress={formData.propertyAddress}
+              propertyCity={formData.propertyCity}
+              propertyState={formData.propertyState}
+              propertyZip={formData.propertyZip}
+              propertyPrice={formData.propertyPrice}
+              originalLoanAmount={formData.originalLoanAmount}
+              currentBalance={formData.currentBalance}
+              interestRate={formData.interestRate}
+              termLength={formData.termLength}
+              startMonth={formData.startMonth}
+              startYear={formData.startYear}
+              monthlyPayment={formData.monthlyPayment}
+              creditScore={formData.creditScore}
+              onPropertyAddressChange={(value) => setFormData((prev) => ({ ...prev, propertyAddress: value }))}
+              onPropertyCityChange={(value) => setFormData((prev) => ({ ...prev, propertyCity: value }))}
+              onPropertyStateChange={(value) => setFormData((prev) => ({ ...prev, propertyState: value }))}
+              onPropertyZipChange={(value) => setFormData((prev) => ({ ...prev, propertyZip: value }))}
+              onPropertyPriceChange={(value) => setFormData((prev) => ({ ...prev, propertyPrice: value }))}
+              onOriginalLoanAmountChange={(value) => setFormData((prev) => ({ ...prev, originalLoanAmount: value }))}
+              onCurrentBalanceChange={(value) => setFormData((prev) => ({ ...prev, currentBalance: value }))}
+              onInterestRateChange={(value) => setFormData((prev) => ({ ...prev, interestRate: value }))}
+              onTermLengthChange={(value) => setFormData((prev) => ({ ...prev, termLength: value }))}
+              onStartMonthChange={(value) => setFormData((prev) => ({ ...prev, startMonth: value }))}
+              onStartYearChange={(value) => setFormData((prev) => ({ ...prev, startYear: value }))}
+              onMonthlyPaymentChange={(value) => setFormData((prev) => ({ ...prev, monthlyPayment: value }))}
+              onCreditScoreChange={(value) => setFormData((prev) => ({ ...prev, creditScore: value }))}
+              onNext={onSave}
+            />
 
-        {/* Right: Derived values (always read-only) */}
-        <aside className="lg:col-span-2 space-y-5">
-          <Panel title="Calculated">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Stat
-                label="Min. Monthly Payment (P&I)"
-                value={fmtCurrency(minMonthlyPaymentPI)}
-              />
-              <Stat
-                label="Total Monthly (PITI est.)"
-                value={fmtCurrency(totalMonthlyPITI)}
-                hint="Taxes/ins=0 here"
-              />
-              <Stat
-                label="Months Remaining"
-                value={
-                  monthsRemaining === Number.POSITIVE_INFINITY
-                    ? "∞"
-                    : `${monthsRemaining}`
-                }
-              />
-              <Stat
-                label="Future Interest To Pay"
-                value={fmtCurrency(futureInterestToPay)}
-              />
-              <Stat label="Current APR" value={fmtPercent(rate)} />
-              <Stat
-                label="Forecasted Payoff"
-                value={forecastPayoffDate.toLocaleDateString()}
-              />
-            </div>
-            {monthsRemaining === Number.POSITIVE_INFINITY && (
-              <p className="mt-2 text-xs text-red-600">
-                Payment too low to amortize at this rate; increase payment or
-                reduce balance.
-              </p>
-            )}
-          </Panel>
-
-          <div className="grid justify-items-center rounded-2xl border p-4 md:p-5 shadow-sm">
-            {/* Edit / Save+Cancel */}
-            {!editMode ? (
-              <button
-                onClick={enterEdit}
-                className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium hover:bg-gray-50"
-                title="Edit"
-              >
-                <Pencil className="h-4 w-4" />
-                Edit
-              </button>
-            ) : (
-              <div className="flex gap-2">
-                <button
-                  onClick={onSave}
-                  disabled={saving}
-                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-3 py-2 text-sm font-medium hover:bg-slate-800 disabled:opacity-50"
-                  title="Save changes"
-                >
-                  <Save className="h-4 w-4" />
-                  {saving ? "Saving..." : "Save"}
+          <div className="max-w-4xl mx-auto mt-5 grid justify-items-center rounded-2xl border p-4 md:p-5 shadow-sm">
+                          
+                <button className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium border-red-800 bg-red-600 text-white hover:bg-red-700">
+                  <Trash2 className="h-4 w-4" /> 
+                  Delete Property
                 </button>
-                <button
-                  onClick={exitEdit}
-                  className="inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium hover:bg-gray-50"
-                  title="Exit edit mode"
-                >
-                  <X className="h-4 w-4" />
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-        </aside>
-      </div>
+                </div>
     </main>
   );
 }
