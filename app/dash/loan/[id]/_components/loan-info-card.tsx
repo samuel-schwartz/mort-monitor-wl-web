@@ -100,7 +100,7 @@ export function LoanInfoCard({ loanId, loanData }: any) {
         <Button variant="outline" className="w-full bg-transparent mt-6">
           <Link
             href={`/dash/loan/${loanId}/details#edit`}
-            className="flex items-center"
+            className="flex items-center w-full justify-center"
           >
             Update Details
           </Link>

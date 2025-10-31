@@ -17,19 +17,23 @@ import {
   Activity,
   UserCog,
   LogOut,
+  ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState } from "react";
 import { signOutUser } from "@/app/_actions/auth";
 import type { User } from "@/types/models";
 import type { Property, Broker } from "@/types/models";
 import Image from "next/image";
+import { getBrokerFromContext } from "@/app/_providers/broker-provider";
+import SidebarAccount from "@/components/shared/sidebar-account";
 
 interface DashboardNavClientProps {
   user: User | null;
   properties: Property[];
   broker: Broker | null;
+  isSpyView: boolean;
 }
 
 function NavContent({
@@ -39,6 +43,7 @@ function NavContent({
   brandName,
   brandColor,
   logoUrl,
+  isSpyView,
 }: {
   onLinkClick?: () => void;
   user: User | null;
@@ -46,17 +51,18 @@ function NavContent({
   brandName: string;
   brandColor?: string;
   logoUrl?: string;
+  isSpyView: boolean
 }) {
   const params = useParams<{ id: string }>();
   const currentPropertyId = params.id;
 
-  const handleSignOut = async () => {
-    await signOutUser();
-  };
+  const pathname = usePathname();
 
-  const userInitials = user
-    ? `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
-    : "?";
+  const isActive = (path: string) =>
+    pathname === path || pathname.endsWith(path);
+  const broker = getBrokerFromContext();
+  const viewAsBrokerParam = isSpyView && broker ? "viewAsBroker=" + broker.id : "";
+
 
   return (
     <>
@@ -84,14 +90,20 @@ function NavContent({
         {properties.length > 0 ? (
           properties.map((property) => {
             const urlSafeId = encodeURIComponent(property.id);
-            const isActive = currentPropertyId === property.id;
+
+            const loanPath = `/dash/loan/${urlSafeId}`
+            const alertsPath = `/dash/loan/${urlSafeId}/alerts`
+            const ratesPath = `/dash/loan/${urlSafeId}/rates`
+            const closingCostsPath = `/dash/loan/${urlSafeId}/closing-costs`
+
 
             return (
-              <div key={property.id}>
-                <Link href={`/dash/loan/${urlSafeId}`} onClick={onLinkClick}>
+              <div key={property.id} className="border-b pb-2" >
+
+                <Link href={loanPath} onClick={onLinkClick}>
                   <Button
-                    variant={isActive ? "secondary" : "ghost"}
-                    className="w-full justify-start"
+                    variant={isActive(loanPath) ? "secondary" : "ghost"}
+                    className="w-full justify-start m-1"
                   >
                     <Home className="mr-3 h-5 w-5" />
                     {property.address}
@@ -99,40 +111,43 @@ function NavContent({
                 </Link>
 
                 <Link
-                  href={`/dash/loan/${urlSafeId}/alerts`}
+                  href={alertsPath}
                   onClick={onLinkClick}
                 >
                   <Button
-                    variant="ghost"
-                    className="w-full justify-start pl-11"
+
+                    variant={isActive(alertsPath) ? "secondary" : "ghost"}
+                    className="w-full justify-start m-1"
                   >
-                    <Bell className="mr-3 h-4 w-4" />
+                    <Bell className="mx-3 h-4 w-4" />
                     Alerts
                   </Button>
                 </Link>
 
                 <Link
-                  href={`/dash/loan/${urlSafeId}/rates`}
+                  href={ratesPath}
                   onClick={onLinkClick}
                 >
                   <Button
-                    variant="ghost"
-                    className="w-full justify-start pl-11"
+                    
+                    variant={isActive(ratesPath) ? "secondary" : "ghost"}
+                    className="w-full justify-start m-1"
                   >
-                    <Activity className="mr-3 h-4 w-4" />
+                    <Activity className="mx-3 h-4 w-4" />
                     Rate Trends
                   </Button>
                 </Link>
 
                 <Link
-                  href={`/dash/loan/${urlSafeId}/closing-costs`}
+                  href={closingCostsPath}
                   onClick={onLinkClick}
                 >
                   <Button
-                    variant="ghost"
-                    className="w-full justify-start pl-11"
+                    
+                    variant={isActive(closingCostsPath) ? "secondary" : "ghost"}
+                    className="w-full justify-start m-1"
                   >
-                    <ReceiptText className="mr-3 h-4 w-4" />
+                    <ReceiptText className="mx-3 h-4 w-4" />
                     Closing Costs
                   </Button>
                 </Link>
@@ -148,7 +163,7 @@ function NavContent({
         <Link
           href="/dash/add-property"
           onClick={onLinkClick}
-          className="block mt-8"
+          className="block mt-6"
         >
           <Button variant="ghost" className="w-full justify-start">
             <HousePlus className="mr-3 h-5 w-5" />
@@ -156,6 +171,17 @@ function NavContent({
           </Button>
         </Link>
       </nav>
+
+      <SidebarAccount />
+
+      {isSpyView && (
+        <Link href={"/broker"} onClick={onLinkClick}>
+          <Button variant="default" size="sm" className="w-full">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Return to Broker View
+          </Button>
+        </Link>
+      )}
     </>
   );
 }
@@ -164,6 +190,7 @@ export function DashboardNavClient({
   user,
   properties,
   broker,
+  isSpyView
 }: DashboardNavClientProps) {
   const [open, setOpen] = useState(false);
 
@@ -191,6 +218,7 @@ export function DashboardNavClient({
               brandName={brandName}
               brandColor={brandColor}
               logoUrl={logoUrl}
+              isSpyView={isSpyView}
             />
           </SheetContent>
         </Sheet>
@@ -204,6 +232,7 @@ export function DashboardNavClient({
           brandName={brandName}
           brandColor={brandColor}
           logoUrl={logoUrl}
+          isSpyView={isSpyView}
         />
       </div>
     </>

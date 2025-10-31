@@ -1,6 +1,7 @@
 import { DollarSign, Clock, TrendingDown, Home, Calendar, PiggyBank } from "lucide-react"
 
 export type TemplateKind =
+  | string
   | "monthly-savings"
   | "break-even"
   | "pmi-removal"

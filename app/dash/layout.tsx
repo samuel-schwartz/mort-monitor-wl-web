@@ -1,36 +1,47 @@
 import type React from "react";
-import { DashboardNav } from "./_components/dashboard-nav";
-import { getCurrentUser } from "@/app/_actions/auth";
+import { getCurrentUser, getUser } from "@/app/_actions/auth";
 import { getUserProperties } from "@/app/_actions/properties";
 import { getBroker } from "@/app/_actions/brokers";
+import { Property } from "@/types/models";
+import { UserProvider } from "../_providers/user-provider";
+import { BrokerProvider } from "../_providers/broker-provider";
+import { DashboardNavClient } from "./_components/dashboard-nav-client";
 
 export default async function DashboardLayout({
   children,
+  searchParams,
 }: {
   children: React.ReactNode;
+  searchParams?: Promise<{ viewAsBroker?: string }>;
 }) {
-  const userResult = await getCurrentUser();
-  const user = userResult.success ? userResult.user : null;
+  const params = searchParams ? await searchParams : {};
+  const viewAsBroker = params?.viewAsBroker;
+  const user = await getUser();
+  const brokerId = viewAsBroker || user.brokerId;
+  console.log("[v0] BrokerLayout - userId:", user.id);
+  console.log("[v0] BrokerLayout - viewAsBroker:", viewAsBroker);
+  console.log("[v0] BrokerLayout - brokerId:", brokerId);
+  if (!brokerId) return;
+  const brokerResult = await getBroker(brokerId);
+  const broker = brokerResult.success ? brokerResult.data : null;
 
-  let properties = [];
-  let broker = null;
+  let properties: Property[] = [];
 
   if (user) {
     const propertiesResult = await getUserProperties(user.id);
     properties = propertiesResult.success ? propertiesResult.data || [] : [];
-
-    if (user.brokerId) {
-      const brokerResult = await getBroker(user.brokerId);
-      broker = brokerResult.success ? brokerResult.data : null;
-    }
   }
 
   return (
-    <div className="min-h-screen">
-      <DashboardNav user={user} properties={properties} broker={broker} />
-      <div className="lg:ml-64">
-        <div className="p-6">{children}</div>
-      </div>
-    </div>
+
+    <div>
+          <UserProvider value={user}>
+            <BrokerProvider value={broker}>
+              
+            <DashboardNavClient user={user} properties={properties} broker={broker} isSpyView={!!viewAsBroker} />
+              <main className="p-4 sm:p-6 lg:p-10 lg:pl-72">{children}</main>
+            </BrokerProvider>
+          </UserProvider>
+        </div>
   );
 }

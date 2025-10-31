@@ -13,8 +13,9 @@ import { TrendingDown, RefreshCw, DollarSign, Home } from "lucide-react";
 import { useState } from "react";
 import { CurrentLoan } from "@/app/dash/loan/[id]/rates/_components/current-loan";
 import { LoanInfoCardShort } from "@/app/dash/loan/[id]/rates/_components/loan-info-card-short";
+import { useParams } from "next/navigation";
 
-export default function RatesPage({ params }: { params: { id: string } }) {
+export default function RatesPage() {
   const [lastUpdate, setLastUpdate] = useState("2025-01-21 10:30 AM");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -31,6 +32,9 @@ export default function RatesPage({ params }: { params: { id: string } }) {
     remainingBalance: 378500,
     propertyAddress: "123 Main St, Eau Claire, WI 54701",
   };
+
+
+    const params = useParams<{ id: string }>();
 
   return (
     <div className="flex flex-col gap-4 sm:gap-6">

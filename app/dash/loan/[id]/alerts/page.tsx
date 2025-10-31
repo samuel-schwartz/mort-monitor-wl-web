@@ -51,7 +51,6 @@ import type {
 } from "@/types/alerts";
 import { AlertInputFields } from "@/components/shared/alert-input-fields";
 import { LoanTermSelector } from "@/components/shared/loan-term-selector";
-import { calculateTotalAlertCount, PRICING } from "@/lib/config/pricing";
 import { summarizeInputs } from "@/types/alerts";
 import { useToast } from "@/hooks/use-toast";
 
@@ -99,16 +98,14 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
     },
     ...(shouldShowPMI
       ? [
-          {
-            id: "pmi-removal",
-            name: "PMI Removal",
-            description:
-              "Alert me when LTV reaches 20%, so PMI can be removed.",
-            icon: Home,
-            defaultInputs: { ltv: 20 },
-            noTermSelection: true,
-          },
-        ]
+        {
+          id: "pmi-removal",
+          name: "PMI Removal",
+          description: "Alert me when LTV reaches 20%, so PMI can be removed.",
+          icon: Home,
+          defaultInputs: { ltv: 20 },
+        },
+      ]
       : []),
     {
       id: "rate-improvement",
@@ -213,7 +210,7 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
           {
             templateId: alertId,
             inputs: alert.defaultInputs,
-            loanTerms: alert.noTermSelection ? [] : [30, 15],
+            loanTerms: [30, 15],
           },
         ]);
       }
@@ -243,10 +240,10 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
       createdAlarms.map((alarm) =>
         alarm.id === alarmId
           ? {
-              ...alarm,
-              snoozed: true,
-              snoozeUntil: Date.now() + 86400000 * days,
-            }
+            ...alarm,
+            snoozed: true,
+            snoozeUntil: Date.now() + 86400000 * days,
+          }
           : alarm,
       ),
     );
@@ -258,10 +255,10 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
       createdAlarms.map((alarm) =>
         alarm.id === alarmId
           ? {
-              ...alarm,
-              snoozed: false,
-              snoozeUntil: null,
-            }
+            ...alarm,
+            snoozed: false,
+            snoozeUntil: null,
+          }
           : alarm,
       ),
     );
@@ -317,9 +314,6 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
     setAlarmToDelete(alarmId);
     setDeleteConfirmOpen(true);
   };
-
-  const totalAlertCount = calculateTotalAlertCount(selectedAlerts);
-  const annualCost = totalAlertCount * PRICING.pricePerAlertPerYear;
 
   const addNewAlarm = () => {
     const newAlarms: CreatedAlarm[] = [];
@@ -628,19 +622,17 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
                     <div
                       key={alert.id}
                       onClick={() => toggleAlert(alert.id)}
-                      className={`border-2 rounded-lg p-4 transition-all cursor-pointer ${
-                        isSelected
+                      className={`border-2 rounded-lg p-4 transition-all cursor-pointer ${isSelected
                           ? "border-primary shadow-md"
                           : "border-border hover:border-primary/50 hover:shadow-sm"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-start gap-3">
                         <div
-                          className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${
-                            isSelected
+                          className={`flex-shrink-0 w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all ${isSelected
                               ? "bg-primary border-primary"
                               : "border-muted-foreground/30"
-                          }`}
+                            }`}
                         >
                           {isSelected && (
                             <Check className="h-4 w-4 text-primary-foreground" />
@@ -674,8 +666,6 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
                             }
                           />
 
-                          {!alert.noTermSelection && (
-                            <>
                               <Separator />
                               <LoanTermSelector
                                 selectedTerms={config.loanTerms}
@@ -683,8 +673,6 @@ export default function AlertsPage({ params }: { params: { id: string } }) {
                                   updateAlertLoanTerms(alert.id, terms)
                                 }
                               />
-                            </>
-                          )}
                         </div>
                       )}
                     </div>
