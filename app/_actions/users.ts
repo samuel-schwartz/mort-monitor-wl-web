@@ -14,7 +14,7 @@ import { validateToken } from "./tokens"
 import type { User, CreateUserInput, UpdateUserInput } from "@/types/api"
 
 // Re-export types for backwards compatibility
-export type { User, CreateUserInput, UpdateUserInput }
+
 
 interface SessionData {
   userId: string
@@ -28,7 +28,7 @@ interface SessionData {
 /**
  * Create a new user account
  */
-export async function createUser(
+async function createUser(
   input: CreateUserInput,
 ): Promise<{ success: boolean; userId?: string; error?: string }> {
   const result = await apiClient.post<{ id: string }>("/users", input, () => ({ id: `user_${Date.now()}` }))
@@ -43,7 +43,7 @@ export async function createUser(
 /**
  * Get user by ID
  */
-export async function getUser(userId: string): Promise<{ success: boolean; user?: User; error?: string }> {
+async function getUser(userId: string): Promise<{ success: boolean; user?: User; error?: string }> {
   const result = await apiClient.get<User>(`/users/${userId}`, () => getMockUser(userId))
 
   if (!result.success) {
@@ -77,7 +77,7 @@ export async function updateUser(
 /**
  * Authenticate user with email and password
  */
-export async function authenticateUser(
+async function authenticateUser(
   email: string,
   password: string,
 ): Promise<{ success: boolean; userId?: string; error?: string }> {
@@ -93,7 +93,7 @@ export async function authenticateUser(
   return { success: true, userId: result.data?.userId }
 }
 
-export const loginUser = authenticateUser
+const loginUser = authenticateUser
 
 /**
  * Authenticate user with Google OAuth during invitation acceptance

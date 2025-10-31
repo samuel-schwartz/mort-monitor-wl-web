@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { handlers,  signOut,  } = NextAuth({
   providers: [],
   secret: process.env.AUTH_SECRET || "dev-secret-key-for-local-development-min-32-chars-long",
   pages: {

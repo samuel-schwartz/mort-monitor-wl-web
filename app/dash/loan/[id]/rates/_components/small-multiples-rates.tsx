@@ -507,5 +507,4 @@ function SmallMultiplesRates({
   );
 }
 
-export default SmallMultiplesRates;
 export { SmallMultiplesRates };

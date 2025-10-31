@@ -29,13 +29,13 @@ export type UpdateUserInput = {
   lastName?: string
 }
 
-export type UserResponse = {
+type UserResponse = {
   success: boolean
   user?: User
   error?: string
 }
 
-export type CreateUserResponse = {
+type CreateUserResponse = {
   success: boolean
   userId?: string
   error?: string
@@ -45,7 +45,7 @@ export type CreateUserResponse = {
 // Property API Types
 // ============================================================================
 
-export type CreatePropertyInput = {
+type CreatePropertyInput = {
   userId: string
   address: string
   city?: string
@@ -60,7 +60,7 @@ export type CreatePropertyInput = {
   loanStartDate?: string
 }
 
-export type UpdatePropertyInput = {
+type UpdatePropertyInput = {
   address?: string
   city?: string
   state?: string
@@ -74,19 +74,19 @@ export type UpdatePropertyInput = {
   loanStartDate?: string
 }
 
-export type PropertyResponse = {
+type PropertyResponse = {
   success: boolean
   property?: Property
   error?: string
 }
 
-export type PropertiesResponse = {
+type PropertiesResponse = {
   success: boolean
   properties?: Property[]
   error?: string
 }
 
-export type CreatePropertyResponse = {
+type CreatePropertyResponse = {
   success: boolean
   propertyId?: string
   error?: string
@@ -113,19 +113,19 @@ export type UpdateAlertInput = {
   snoozeUntil?: string | null
 }
 
-export type AlertResponse = {
+type AlertResponse = {
   success: boolean
   alert?: Alert
   error?: string
 }
 
-export type AlertsResponse = {
+type AlertsResponse = {
   success: boolean
   alerts?: Alert[]
   error?: string
 }
 
-export type CreateAlertResponse = {
+type CreateAlertResponse = {
   success: boolean
   alertId?: string
   subscriptionId?: string
@@ -137,7 +137,7 @@ export type CreateAlertResponse = {
 // Broker API Types
 // ============================================================================
 
-export type CreateBrokerInput = {
+type CreateBrokerInput = {
   email: string
   password: string
   firstName: string
@@ -147,7 +147,7 @@ export type CreateBrokerInput = {
   subscriptionPlan: "starter" | "professional" | "enterprise"
 }
 
-export type UpdateBrokerInput = {
+type UpdateBrokerInput = {
   firstName?: string
   lastName?: string
   companyName?: string
@@ -158,13 +158,13 @@ export type UpdateBrokerInput = {
   defaultRateThreshold?: number
 }
 
-export type BrokerResponse = {
+type BrokerResponse = {
   success: boolean
   broker?: Broker
   error?: string
 }
 
-export type BrokersResponse = {
+type BrokersResponse = {
   success: boolean
   brokers?: Broker[]
   error?: string
@@ -192,19 +192,19 @@ export type UpdateClientInput = {
   creditScore?: string
 }
 
-export type ClientResponse = {
+type ClientResponse = {
   success: boolean
   client?: Client
   error?: string
 }
 
-export type ClientsResponse = {
+type ClientsResponse = {
   success: boolean
   clients?: Client[]
   error?: string
 }
 
-export type ClientSummariesResponse = {
+type ClientSummariesResponse = {
   success: boolean
   clients?: ClientSummary[]
   error?: string
@@ -214,7 +214,7 @@ export type ClientSummariesResponse = {
 // Analytics API Types
 // ============================================================================
 
-export type BrokerAnalyticsResponse = {
+type BrokerAnalyticsResponse = {
   success: boolean
   analytics?: BrokerAnalytics
   error?: string
@@ -224,7 +224,7 @@ export type BrokerAnalyticsResponse = {
 // Generic API Response
 // ============================================================================
 
-export type ApiResponse<T = unknown> = {
+type ApiResponse<T = unknown> = {
   success: boolean
   data?: T
   error?: string

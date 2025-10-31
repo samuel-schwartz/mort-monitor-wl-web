@@ -34,4 +34,4 @@ if (parsedEnv.data.NODE_ENV === "production") {
 export const env = parsedEnv.data
 
 // Type-safe environment variables
-export type Env = z.infer<typeof envSchema>
+type Env = z.infer<typeof envSchema>

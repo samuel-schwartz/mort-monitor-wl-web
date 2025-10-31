@@ -17,7 +17,7 @@ export type AlertInputs =
   | { kind: "break-even-date"; byDate: string }
   | { kind: "interest-savings"; lifetimeSavings: number }
 
-export type TemplateInputs = Partial<{
+type TemplateInputs = Partial<{
   amount: number
   months: number
   ltv: number
@@ -49,10 +49,10 @@ export type CreatedAlarm = {
 }
 
 export const LOAN_TERMS = [30, 15] as const
-export type LoanTerm = (typeof LOAN_TERMS)[number]
+type LoanTerm = (typeof LOAN_TERMS)[number]
 
-export const PRIMARY_TERMS = [30, 15] as const
-export const EXTRA_TERMS = [20, 10, 7, 5] as const
+const PRIMARY_TERMS = [30, 15] as const
+const EXTRA_TERMS = [20, 10, 7, 5] as const
 
 export type AlertConfig = {
   templateId: TemplateKind
@@ -60,7 +60,7 @@ export type AlertConfig = {
   loanTerms: number[]
 }
 
-export function defaultTemplates(): AlertTemplate[] {
+function defaultTemplates(): AlertTemplate[] {
   return [
     {
       id: "monthly-savings",

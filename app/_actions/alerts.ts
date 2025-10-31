@@ -11,9 +11,9 @@ import { getMockPropertyAlerts } from "@/lib/mock-data"
 import type { Alert, CreateAlertInput, UpdateAlertInput } from "@/types/api"
 
 // Re-export types for backwards compatibility
-export type { Alert, CreateAlertInput, UpdateAlertInput }
 
-export type TemplateKind = string
+
+type TemplateKind = string
 
 /**
  * Create a new alert with subscription
@@ -60,7 +60,7 @@ export async function createAlert(input: CreateAlertInput): Promise<{
 /**
  * Get all alerts for a property
  */
-export async function getPropertyAlerts(
+async function getPropertyAlerts(
   propertyId: string,
 ): Promise<{ success: boolean; alerts?: Alert[]; error?: string }> {
   try {
@@ -85,7 +85,7 @@ export async function getPropertyAlerts(
 /**
  * Update an alert
  */
-export async function updateAlert(
+async function updateAlert(
   alertId: string,
   propertyId: string,
   input: UpdateAlertInput,
@@ -111,7 +111,7 @@ export async function updateAlert(
 /**
  * Delete an alert
  */
-export async function deleteAlert(alertId: string, propertyId: string): Promise<{ success: boolean; error?: string }> {
+async function deleteAlert(alertId: string, propertyId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const result = await apiClient.delete(`/alerts/${alertId}`)
 
@@ -133,7 +133,7 @@ export async function deleteAlert(alertId: string, propertyId: string): Promise<
 /**
  * Get all alerts for a property (alias for getPropertyAlerts)
  */
-export async function getAlertsByProperty(
+async function getAlertsByProperty(
   propertyId: string,
 ): Promise<{ success: boolean; alerts?: Alert[]; error?: string }> {
   return getPropertyAlerts(propertyId)

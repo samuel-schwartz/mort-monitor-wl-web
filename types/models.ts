@@ -9,7 +9,7 @@ import type { AlertInputs, TemplateKind } from "@/types/alerts"
 /**
  * OAuth provider
  */
-export type OAuthProvider = "credentials" | "google"
+type OAuthProvider = "credentials" | "google"
 
 /**
  * User account information
@@ -92,7 +92,7 @@ export type Broker = {
 /**
  * Client Onboarding Status
  */
-export type OnboardingStatus = "invited" | "onboarded"
+type OnboardingStatus = "invited" | "onboarded"
 
 /**
  * Client information (end users managed by brokers)

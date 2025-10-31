@@ -91,14 +91,14 @@ export async function getUserProperties(userId: string): Promise<ApiResponse<Pro
 /**
  * Get all properties for a user (alias for getUserProperties)
  */
-export async function getPropertiesByUser(userId: string): Promise<ApiResponse<Property[]>> {
+async function getPropertiesByUser(userId: string): Promise<ApiResponse<Property[]>> {
   return getUserProperties(userId)
 }
 
 /**
  * Get a single property by ID
  */
-export async function getProperty(propertyId: string): Promise<ApiResponse<Property>> {
+async function getProperty(propertyId: string): Promise<ApiResponse<Property>> {
   try {
     const result = await apiClient.get<Property>(`/properties/${propertyId}`, () => getMockProperty(propertyId))
 
@@ -147,7 +147,7 @@ export async function updateProperty(propertyId: string, input: PropertyUpdateIn
 /**
  * Delete a property
  */
-export async function deleteProperty(propertyId: string): Promise<ApiResponse<void>> {
+async function deleteProperty(propertyId: string): Promise<ApiResponse<void>> {
   try {
     const result = await apiClient.delete(`/properties/${propertyId}`)
 

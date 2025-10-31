@@ -97,7 +97,7 @@ export async function validateToken(token: string, type?: TokenType): Promise<Ap
 /**
  * Invalidate/consume a token
  */
-export async function invalidateToken(token: string): Promise<ApiResponse<void>> {
+async function invalidateToken(token: string): Promise<ApiResponse<void>> {
   try {
     const result = await apiClient.delete(`/tokens/${token}`)
 

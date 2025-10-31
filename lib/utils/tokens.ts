@@ -22,7 +22,7 @@ export type TokenData = {
 /**
  * Generate a secure random token
  */
-export function generateToken(): string {
+function generateToken(): string {
   // In production, this would use a cryptographically secure method
   // For now, using a simple random string
   const array = new Uint8Array(32)
@@ -83,7 +83,7 @@ export function isTokenExpired(expiresAt: string): boolean {
 /**
  * Get days until token expiration
  */
-export function getDaysUntilExpiration(expiresAt: string): number {
+function getDaysUntilExpiration(expiresAt: string): number {
   const expiresDate = new Date(expiresAt)
   const now = Date.now()
   const diff = expiresDate.getTime() - now

@@ -17,7 +17,7 @@ export const loginSchema = z.object({
   role: z.enum([USER_ROLES.ADMIN, USER_ROLES.BROKER, USER_ROLES.CLIENT]).optional(),
 })
 
-export const signupSchema = z.object({
+const signupSchema = z.object({
   firstName: z
     .string()
     .min(
@@ -82,7 +82,7 @@ export const propertySchema = z.object({
 export const propertyUpdateSchema = propertySchema.partial()
 
 // User Schemas
-export const userUpdateSchema = z.object({
+const userUpdateSchema = z.object({
   firstName: z
     .string()
     .min(
@@ -108,7 +108,7 @@ export const userUpdateSchema = z.object({
 })
 
 // Broker Schemas
-export const brokerSchema = z.object({
+const brokerSchema = z.object({
   emails: z
     .string()
     .min(1, "At least one email is required")
@@ -133,7 +133,7 @@ export const brokerSchema = z.object({
 
 export const brokerUpdateSchema = brokerSchema.partial().omit({ emails: true })
 
-export const brokerProfileSchema = z.object({
+const brokerProfileSchema = z.object({
   firstName: z
     .string()
     .min(
@@ -169,7 +169,7 @@ export const brokerProfileSchema = z.object({
 })
 
 // Client Schemas
-export const clientSchema = z.object({
+const clientSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   firstName: z
     .string()
@@ -202,23 +202,23 @@ export const clientSchema = z.object({
   sendInvite: z.boolean().optional(),
 })
 
-export const clientUpdateSchema = clientSchema.partial().omit({ email: true, brokerId: true })
+const clientUpdateSchema = clientSchema.partial().omit({ email: true, brokerId: true })
 
 // Alert Schemas
-export const alertSchema = z.object({
+const alertSchema = z.object({
   propertyId: z.string().min(1, "Property ID is required"),
   templateId: z.string().min(1, "Alert template is required"),
   status: z.enum([ALERT_STATUS.ACTIVE, ALERT_STATUS.SNOOZED, ALERT_STATUS.SOUNDING]).optional(),
   inputs: z.record(z.any()).optional(),
 })
 
-export const alertUpdateSchema = z.object({
+const alertUpdateSchema = z.object({
   status: z.enum([ALERT_STATUS.ACTIVE, ALERT_STATUS.SNOOZED, ALERT_STATUS.SOUNDING]).optional(),
   inputs: z.record(z.any()).optional(),
 })
 
 // White Label Settings Schema
-export const whiteLabelSchema = z.object({
+const whiteLabelSchema = z.object({
   brandName: z
     .string()
     .min(2, "Brand name must be at least 2 characters")
@@ -232,7 +232,7 @@ export const whiteLabelSchema = z.object({
 })
 
 // Rate Configuration Schema
-export const rateConfigSchema = z.object({
+const rateConfigSchema = z.object({
   defaultMargin: z
     .string()
     .regex(/^\d+(\.\d+)?$/, "Margin must be a valid number")
@@ -248,7 +248,7 @@ export const rateConfigSchema = z.object({
 })
 
 // Invitation Acceptance Schema
-export const inviteAcceptanceSchema = z.object({
+const inviteAcceptanceSchema = z.object({
   token: z.string().regex(/^[a-f0-9]{64}$/i, "Invalid token format"),
   password: z
     .string()
@@ -286,18 +286,18 @@ export const inviteAcceptanceSchema = z.object({
 })
 
 // Type exports for TypeScript
-export type LoginInput = z.infer<typeof loginSchema>
-export type SignupInput = z.infer<typeof signupSchema>
+type LoginInput = z.infer<typeof loginSchema>
+type SignupInput = z.infer<typeof signupSchema>
 export type PropertyInput = z.infer<typeof propertySchema>
 export type PropertyUpdateInput = z.infer<typeof propertyUpdateSchema>
-export type UserUpdateInput = z.infer<typeof userUpdateSchema>
+type UserUpdateInput = z.infer<typeof userUpdateSchema>
 export type BrokerInput = z.infer<typeof brokerSchema>
 export type BrokerUpdateInput = z.infer<typeof brokerUpdateSchema>
-export type BrokerProfileInput = z.infer<typeof brokerProfileSchema>
-export type ClientInput = z.infer<typeof clientSchema>
-export type ClientUpdateInput = z.infer<typeof clientUpdateSchema>
-export type AlertInput = z.infer<typeof alertSchema>
-export type AlertUpdateInput = z.infer<typeof alertUpdateSchema>
-export type WhiteLabelInput = z.infer<typeof whiteLabelSchema>
-export type RateConfigInput = z.infer<typeof rateConfigSchema>
-export type InviteAcceptanceInput = z.infer<typeof inviteAcceptanceSchema>
+type BrokerProfileInput = z.infer<typeof brokerProfileSchema>
+type ClientInput = z.infer<typeof clientSchema>
+type ClientUpdateInput = z.infer<typeof clientUpdateSchema>
+type AlertInput = z.infer<typeof alertSchema>
+type AlertUpdateInput = z.infer<typeof alertUpdateSchema>
+type WhiteLabelInput = z.infer<typeof whiteLabelSchema>
+type RateConfigInput = z.infer<typeof rateConfigSchema>
+type InviteAcceptanceInput = z.infer<typeof inviteAcceptanceSchema>

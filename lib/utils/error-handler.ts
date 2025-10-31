@@ -5,13 +5,13 @@
 
 import { ZodError } from "zod"
 
-export type ErrorResponse = {
+type ErrorResponse = {
   success: false
   error: string
   details?: Record<string, string[]>
 }
 
-export type SuccessResponse<T = unknown> = {
+type SuccessResponse<T = unknown> = {
   success: true
   data: T
 }
@@ -21,7 +21,7 @@ export type ApiResponse<T = unknown> = SuccessResponse<T> | ErrorResponse
 /**
  * Handle Zod validation errors
  */
-export function handleValidationError(error: ZodError): ErrorResponse {
+function handleValidationError(error: ZodError): ErrorResponse {
   const details: Record<string, string[]> = {}
 
   error.errors.forEach((err) => {
@@ -42,7 +42,7 @@ export function handleValidationError(error: ZodError): ErrorResponse {
 /**
  * Handle generic errors
  */
-export function handleError(error: unknown): ErrorResponse {
+function handleError(error: unknown): ErrorResponse {
   if (error instanceof ZodError) {
     return handleValidationError(error)
   }

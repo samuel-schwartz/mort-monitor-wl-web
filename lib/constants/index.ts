@@ -10,7 +10,7 @@ export const USER_ROLES = {
   CLIENT: "client",
 } as const
 
-export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES]
+type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES]
 
 // Alert Status
 export const ALERT_STATUS = {
@@ -47,7 +47,7 @@ export const VALIDATION_LIMITS = {
 } as const
 
 // Routes
-export const ROUTES = {
+const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   ADMIN_DASHBOARD: "/admin",

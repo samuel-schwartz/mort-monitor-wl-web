@@ -8,7 +8,7 @@ import { env } from "@/lib/env"
 /**
  * Check if we're in mock mode (API not configured)
  */
-export function isMockMode(): boolean {
+function isMockMode(): boolean {
   return !env.API_BASE_URL || env.API_BASE_URL == "mock"
 }
 

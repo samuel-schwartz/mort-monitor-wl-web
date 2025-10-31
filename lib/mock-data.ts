@@ -139,7 +139,7 @@ export function getMockProperty(propertyId: string): Property {
   )
 }
 
-export function getMockPropertiesByUser(userId: string): Property[] {
+function getMockPropertiesByUser(userId: string): Property[] {
   const mockProperties: Property[] = [
     {
       id: "property_123",
@@ -182,7 +182,7 @@ export function getMockPropertiesByUser(userId: string): Property[] {
   return mockProperties
 }
 
-export function getMockAlertsByProperty(propertyId: string): Alert[] {
+function getMockAlertsByProperty(propertyId: string): Alert[] {
   const mockAlerts: Alert[] = [
     {
       id: "alert_1",
