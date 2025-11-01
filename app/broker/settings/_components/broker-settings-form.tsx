@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { updateBroker } from "@/app/_actions/brokers";
 import { useToast } from "@/hooks/use-toast";
 import { X } from "lucide-react";
-import type { Broker } from "@/types/models";
+import type { Broker } from "@/types/_models";
 import { getBrokerFromContext } from "@/app/_providers/broker-provider";
 
 function ErrorComp() {

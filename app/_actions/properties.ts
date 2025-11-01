@@ -14,7 +14,7 @@ import {
   type PropertyInput,
   type PropertyUpdateInput,
 } from "@/lib/validation/schemas"
-import type { Property } from "@/types/api"
+import type { Property } from "@/types/_api"
 
 /**
  * Create a new property

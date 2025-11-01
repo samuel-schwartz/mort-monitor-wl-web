@@ -8,7 +8,7 @@
 import { revalidatePath } from "next/cache"
 import { apiClient } from "@/lib/api-client"
 import { getMockPropertyAlerts } from "@/lib/mock-data"
-import type { Alert, CreateAlertInput, UpdateAlertInput } from "@/types/api"
+import type { Alert, CreateAlertInput, UpdateAlertInput } from "@/types/_api"
 
 // Re-export types for backwards compatibility
 

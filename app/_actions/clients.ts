@@ -7,9 +7,9 @@
 import { revalidatePath } from "next/cache"
 import { apiClient } from "@/lib/api-client"
 import { generateInvitationToken } from "./tokens"
-import type { CreateClientInput, UpdateClientInput } from "@/types/api"
-import type { Client, Property } from "@/types/models"
-import type { AlertConfig } from "@/types/alerts"
+import type { CreateClientInput, UpdateClientInput } from "@/types/_api"
+import type { Client, Property } from "@/types/_models"
+import type { AlertConfig } from "@/types/_alerts"
 
 /**
  * Create a new client (broker action)

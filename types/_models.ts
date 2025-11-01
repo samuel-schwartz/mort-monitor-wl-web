@@ -3,7 +3,7 @@
  * Centralized type definitions for User, Property, Alert, and Billing entities
  */
 
-import type { AlertInputs, TemplateKind } from "@/types/alerts"
+import type { AlertInputs, TemplateKind } from "@/types/_alerts"
 
 
 /**

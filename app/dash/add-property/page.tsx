@@ -12,7 +12,7 @@ import AlertSelection from "@/components/onboard/alert-selection"
 import { useToast } from "@/hooks/use-toast"
 import { createProperty } from "@/app/_actions/properties"
 import { createAlert } from "@/app/_actions/alerts"
-import type { AlertConfig } from "@/types/alerts"
+import type { AlertConfig } from "@/types/_alerts"
 
 export default function AddPropertyPage() {
   const router = useRouter()

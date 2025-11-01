@@ -2,7 +2,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import { LOAN_TERMS } from "@/types/alerts"
+import { LOAN_TERMS } from "@/types/_alerts"
 
 interface LoanTermSelectorProps {
   selectedTerms: number[]

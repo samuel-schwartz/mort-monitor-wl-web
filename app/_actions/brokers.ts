@@ -22,7 +22,7 @@ import {
   type BrokerInput,
   type BrokerUpdateInput,
 } from "@/lib/validation/schemas";
-import type { Broker, BrokerAnalytics, ClientSummary } from "@/types/models";
+import type { Broker, BrokerAnalytics, ClientSummary } from "@/types/_models";
 
 /**
  * Create a new broker account (admin only)

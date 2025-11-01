@@ -16,7 +16,7 @@ import { User as LUserIcon, Camera, Trash2, Pencil } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { updateUser } from "@/app/_actions/users";
 import { ChangePassword } from "@/app/account/_components/change-password";
-import { User } from "@/types/models";
+import { User } from "@/types/_models";
 
 export function AccountSettings({ user }: { user: User }) {
   const [firstName, setFirstName] = useState(user?.firstName || "");

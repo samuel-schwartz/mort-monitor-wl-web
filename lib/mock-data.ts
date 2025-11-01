@@ -4,7 +4,7 @@
  */
 
 import { TIME } from "@/lib/constants"
-import type { User, Property, Alert, Broker, ClientSummary} from "@/types/models"
+import type { User, Property, Alert, Broker, ClientSummary} from "@/types/_models"
 
 export const MOCK_BROKERS: Broker[] = [
   {

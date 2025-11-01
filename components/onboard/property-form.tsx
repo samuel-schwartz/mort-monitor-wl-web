@@ -556,7 +556,7 @@ export default function PropertyForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="monthlyPayment" className="text-sm sm:text-base">
-                  Current Monthly Payment
+                  Minimum Monthly Payment
                 </Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm sm:text-base pointer-events-none">

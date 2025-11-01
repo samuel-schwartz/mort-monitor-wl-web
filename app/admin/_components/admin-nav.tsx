@@ -12,7 +12,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SidebarAccount from "@/components/shared/sidebar-account";
-import { Broker, User } from "@/types/models";
+import { Broker, User } from "@/types/_models";
 
 function NavContent({ onLinkClick }: { onLinkClick?: () => void }) {
   const pathname = usePathname();

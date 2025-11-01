@@ -25,7 +25,7 @@ import {
 import { ArrowUpDown, Trash2 } from "lucide-react";
 import { deleteBroker } from "@/app/_actions/brokers";
 import { useRouter } from "next/navigation";
-import { Broker } from "@/types/models";
+import { Broker } from "@/types/_models";
 
 import { useToast } from "@/hooks/use-toast";
 

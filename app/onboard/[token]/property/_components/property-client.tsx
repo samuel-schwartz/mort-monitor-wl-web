@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import PropertyForm from "@/components/onboard/property-form"
 import { updateProperty } from "@/app/_actions/properties"
 import { toast } from "sonner"
-import type { Client } from "@/types/models"
+import type { Client } from "@/types/_models"
 
 interface PropertyClientProps {
   token: string

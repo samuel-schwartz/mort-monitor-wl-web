@@ -26,7 +26,7 @@ import {
 import { ArrowUpDown, Mail, Trash2 } from "lucide-react";
 import { deleteClient, reinviteClient } from "@/app/_actions/clients";
 import { useRouter } from "next/navigation";
-import { ClientSummary } from "@/types/models";
+import { ClientSummary } from "@/types/_models";
 
 import { useToast } from "@/hooks/use-toast";
 

@@ -5,7 +5,7 @@ import { loginSchema } from "@/lib/validation/schemas"
 import { handleActionError } from "@/lib/utils/error-handler"
 import { SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/constants"
 
-import type { UserRole, UserWithRole } from "@/types/models"
+import type { UserRole, UserWithRole } from "@/types/_models"
 
 import { signOut } from "@/auth"
 

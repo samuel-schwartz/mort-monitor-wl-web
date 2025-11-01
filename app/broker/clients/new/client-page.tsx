@@ -12,7 +12,7 @@ import { createAlert } from "@/app/_actions/alerts"
 import { Spinner } from "@/components/ui/spinner"
 import { useToast } from "@/hooks/use-toast"
 import { getBrokerFromContext } from "@/app/_providers/broker-provider" // Fixed import path to use correct broker provider
-import type { AlertConfig } from "@/types/alerts"
+import type { AlertConfig } from "@/types/_alerts"
 
 interface OnboardingState {
   currentStep: number

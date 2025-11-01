@@ -48,10 +48,10 @@ import type {
   CreatedAlarm,
   AlertInputs,
   TemplateKind,
-} from "@/types/alerts";
+} from "@/types/_alerts";
 import { AlertInputFields } from "@/components/shared/alert-input-fields";
 import { LoanTermSelector } from "@/components/shared/loan-term-selector";
-import { summarizeInputs } from "@/types/alerts";
+import { summarizeInputs } from "@/types/_alerts";
 import { useToast } from "@/hooks/use-toast";
 
 const SNOOZE_DURATIONS = [

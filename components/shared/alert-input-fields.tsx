@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type { AlertInputs, TemplateKind } from "@/types/alerts"
+import type { AlertInputs, TemplateKind } from "@/types/_alerts"
 
 interface AlertInputFieldsProps {
   templateId: TemplateKind

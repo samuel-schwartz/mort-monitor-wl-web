@@ -11,7 +11,7 @@ import { apiClient } from "@/lib/api-client"
 import { getMockUser, getMockUpdatedUser } from "@/lib/mock-data"
 import { SESSION_COOKIE_NAME, SESSION_MAX_AGE } from "@/lib/constants"
 import { validateToken } from "./tokens"
-import type { User, CreateUserInput, UpdateUserInput } from "@/types/api"
+import type { User, CreateUserInput, UpdateUserInput } from "@/types/_api"
 
 // Re-export types for backwards compatibility
 

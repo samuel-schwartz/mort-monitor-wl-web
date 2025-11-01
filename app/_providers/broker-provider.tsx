@@ -1,6 +1,6 @@
 "use client";
 
-import { Broker } from "@/types/models";
+import { Broker } from "@/types/_models";
 import React, { createContext, useContext } from "react";
 
 const BrokerContext = createContext<Broker | null>(null);

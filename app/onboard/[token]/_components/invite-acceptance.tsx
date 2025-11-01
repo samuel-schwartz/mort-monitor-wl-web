@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast"
 import { acceptInvitation } from "@/app/_actions/tokens"
 import { authenticateWithGoogle } from "@/app/_actions/users"
 import { Spinner } from "@/components/ui/spinner"
-import type { UserRole } from "@/types/models"
+import type { UserRole } from "@/types/_models"
 
 interface InviteAcceptanceProps {
   token: string

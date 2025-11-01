@@ -14,6 +14,7 @@ import { AlertsCard } from "./loan/[id]/_components/alerts-card";
 import { ClostingCostsCard } from "./loan/[id]/_components/closing-costs-card";
 import { LoanInfoCard } from "./loan/[id]/_components/loan-info-card";
 import { RateChangeCard } from "./loan/[id]/_components/rate-change-card";
+import Dashboard from "./loan/[id]/_components/dashboard";
 
 export default async function DashboardPage() {
   const userId = "123";
@@ -57,39 +58,8 @@ export default async function DashboardPage() {
     ];
 
     return (
-      <div className="p-4 sm:p-6 lg:p-10 lg:pl-72">
-        <div className="space-y-6">
-          {/* Header */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Loan Dashboard
-            </h1>
-            <p className="text-gray-600 dark:text-gray-300">
-              Comprehensive overview of your loan, market opportunities, and
-              alerts
-            </p>
-          </div>
-
-          {/* Market Opportunity & Rate Trends */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="lg:col-span-2">
-              <AlertsCard loanId={firstProperty.id} alertsData={alertsData} />
-            </div>
-
-            <div className="lg:col-span-1">
-              <RateChangeCard loanId={firstProperty.id} />
-            </div>
-
-            <div className="lg:col-span-1">
-              <ClostingCostsCard loanId={firstProperty.id} />
-            </div>
-
-            <div className="lg:col-span-2">
-              <LoanInfoCard loanId={firstProperty.id} loanData={loanData} />
-            </div>
-          </div>
-        </div>
-      </div>
+     
+        <Dashboard id={firstProperty.id} alertsData={alertsData} loanData={loanData} />
     );
   }
 

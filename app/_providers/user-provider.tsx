@@ -1,6 +1,6 @@
 "use client";
 
-import { UserWithRole } from "@/types/models";
+import { UserWithRole } from "@/types/_models";
 import React, { createContext, useContext } from "react";
 
 const UserContext = createContext<UserWithRole | null>(null);

@@ -1,5 +1,6 @@
 import { AlertsCard } from "./_components/alerts-card";
 import { ClostingCostsCard } from "./_components/closing-costs-card";
+import Dashboard from "./_components/dashboard";
 import { LoanInfoCard } from "./_components/loan-info-card";
 import { RateChangeCard } from "./_components/rate-change-card";
 
@@ -42,38 +43,6 @@ export default async function LoanDashboardPage({
   ];
 
   return (
-    <div className="p-4 sm:p-6 lg:p-10">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Loan Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            Comprehensive overview of your loan, market opportunities, and
-            alerts
-          </p>
-        </div>
-
-        {/* Market Opportunity & Rate Trends */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="lg:col-span-2">
-            <AlertsCard loanId={id} alertsData={alertsData} />
-          </div>
-
-          <div className="lg:col-span-1">
-            <RateChangeCard loanId={id} />
-          </div>
-
-          <div className="lg:col-span-1">
-            <ClostingCostsCard loanId={id} />
-          </div>
-
-          <div className="lg:col-span-2">
-            <LoanInfoCard loanId={id} loanData={loanData} />
-          </div>
-        </div>
-      </div>
-    </div>
+   <Dashboard id={id} alertsData={alertsData} loanData={loanData} />
   );
 }

@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation"
 import AlertSelection from "@/components/onboard/alert-selection"
 import { updateClient } from "@/app/_actions/clients"
 import { toast } from "sonner"
-import type { Client } from "@/types/models"
-import type { AlertConfig } from "@/types/alerts"
+import type { Client } from "@/types/_models"
+import type { AlertConfig } from "@/types/_alerts"
 
 interface AlertsClientProps {
   clientData: Client

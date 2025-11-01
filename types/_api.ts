@@ -11,8 +11,8 @@ import type {
   Client,
   ClientSummary,
   BrokerAnalytics,
-} from "./models"
-import type { AlertInputs, TemplateKind } from "@/types/alerts"
+} from "./_models"
+import type { AlertInputs, TemplateKind } from "@/types/_alerts"
 
 // ============================================================================
 // User API Types

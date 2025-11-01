@@ -2,7 +2,7 @@ import type React from "react";
 import { getCurrentUser, getUser } from "@/app/_actions/auth";
 import { getUserProperties } from "@/app/_actions/properties";
 import { getBroker } from "@/app/_actions/brokers";
-import { Property } from "@/types/models";
+import { Property } from "@/types/_models";
 import { UserProvider } from "../_providers/user-provider";
 import { BrokerProvider } from "../_providers/broker-provider";
 import { DashboardNavClient } from "./_components/dashboard-nav-client";
